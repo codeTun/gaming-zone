@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    background: url("./images/mario-bg.jpg") no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+}
+
+#board {
+    width: 550px;
+    height: 540px;
+    margin: 50px auto;
+    display: flex;
+    flex-wrap: wrap;
+    background: url("./images/soil.png") no-repeat center center;
+    background-size: cover;
+    border: 3px solid white;
+    border-radius: 25px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#board div {
+    /* Styles pour les tuiles */
+    width: 180px;
+    height: 180px;
+    background-image: url("./images/pipe.png");
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#board div img {
+    /* Images des taupes et plantes */
+    width: 100px;
+    height: 100px;
+    user-select: none; /* Empêche la sélection de l'image */
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
