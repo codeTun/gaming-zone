@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - Gaming Platform</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body class="contact_body">
+    <div id="contact_app">
+      <div class="contact_container">
+        <a href="/" class="contact_home-btn" aria-label="Go to Home">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+        </a>
+        <h1 class="contact_title contact_floating-element">Contact Us</h1>
+        <form id="contact_form">
+          <div class="contact_form-group">
+            <label for="contact_name">Your Name</label>
+            <input
+              type="text"
+              id="contact_name"
+              required
+              placeholder="Enter your name"
+            />
+          </div>
+
+          <div class="contact_form-group">
+            <label for="contact_email">Email Address</label>
+            <input
+              type="email"
+              id="contact_email"
+              required
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div class="contact_form-group">
+            <label for="contact_subject">Subject</label>
+            <input
+              type="text"
+              id="contact_subject"
+              required
+              placeholder="What's this about?"
+            />
+          </div>
+
+          <div class="contact_form-group">
+            <label for="contact_message">Your Message</label>
+            <textarea
+              id="contact_message"
+              required
+              placeholder="Tell us what's on your mind..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="contact_submit-btn">
+            <span>Send Message</span>
+          </button>
+        </form>
+
+        <div id="contact_success-message" class="contact_success-message">
+          Message sent successfully! We'll get back to you soon.
+        </div>
+
+        <div class="contact_social-links">
+          <a href="#" class="contact_social-link" aria-label="Discord"
+            ><i class="fab fa-discord"></i
+          ></a>
+          <a href="#" class="contact_social-link" aria-label="Twitter"
+            ><i class="fab fa-twitter"></i
+          ></a>
+          <a href="#" class="contact_social-link" aria-label="Email"
+            ><i class="far fa-envelope"></i
+          ></a>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
