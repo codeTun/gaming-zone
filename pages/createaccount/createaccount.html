@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="main1.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <form id="registrationForm" onsubmit="return validatePasswords()">
+        <div class="container">
+            <div class="card">
+                <div class="back-arrow">
+                    <a href="/pages/login/login.html">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
+
+                <h2 style="color: azure;">Create your account</h2>
+                <img src='/assets/images/logo.png'
+                    alt="Gaming Logo">
+
+                <input type="text" id="username" placeholder="Enter your username" required />
+                <input type="email" id="email" placeholder="Enter your email" required />
+                <label for="birthday">Birthday:</label>
+                <input type="date" id="birthday" name="birthday" required />
+
+                <input type="password" id="password" placeholder="Enter your password" required minlength="6" />
+                <input type="password" id="confirmPassword" placeholder="Confirm your password" required minlength="6" />
+
+                <div style="display: flex; align-items: center;">
+                    <h5 id="desc">Choose your sex:</h5>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="gender" value="M" required />
+                            <h5 style="font-size: 1.2em;">&#128102;</h5>
+                        </label>
+                        <label>
+                            <input type="radio" name="gender" value="F" required />
+                            <h5 style="font-size: 1.2em;">&#128105;</h5>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit">Create account</button>
+                    <button type="button" style="background-color: rgb(190, 4, 4);" onclick="redirectToLogin()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script src="createaccountscript.js"></script>
+</body>
+
+</html>

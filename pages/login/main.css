@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Raleway, sans-serif;
+}
+
+body {
+    background: url('/assets/images/purple-gaming-bw9kl5n6y8edoyim.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.card {
+    width: 420px;
+    height: 450px; /* Augmente la hauteur pour inclure tous les éléments */
+    background: #07182E;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 20px;
+    overflow: hidden;
+    text-align: center;
+    z-index: 1;
+    padding: 20px;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 130%;
+    background-image: linear-gradient(180deg, rgb(0, 183, 255), rgb(255, 48, 255));
+    animation: rotBGimg 3s linear infinite;
+    z-index: 0; /* Derrière le contenu */
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    background: #07182E;
+    border-radius: 15px;
+    z-index: 0;
+}
+
+.card h2, .card img, .card input, .card button, .card h5, .card a {
+    z-index: 10; /* Assure que tous les éléments sont visibles */
+    position: relative;
+}
+.home-icon {
+    position: absolute;
+    top: 7.3%;
+    right: 170px;
+    font-size: 28px;
+    color: white !important; /* Assure que la couleur reste blanche */
+    text-decoration: none; /* Empêche tout soulignement accidentel */
+    z-index: 100; /* Pour s'assurer qu'il est toujours visible */
+}
+
+.home-icon:hover {
+    color: white !important; /* Maintient la couleur blanche au survol */
+}
+
+
+
+
+
+.card img {
+    width: 100px; /* Taille du logo */
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.card input {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+.card button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: rgb(0, 183, 255);
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.card button:hover {
+    background: rgb(255, 48, 255);
+}
+
+.card h5 {
+    color: white;
+    margin: 10px 0 5px; /* Ajoute de l'espace au-dessus et en dessous */
+    font-size: 0.9em;
+}
+
+.card a {
+    color: #00b7ff;
+    text-decoration: underline;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.card a:hover {
+    color: #ff30ff;
+}
+
+@keyframes rotBGimg {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

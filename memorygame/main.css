@@ -1,7 +1,9 @@
 * {
     box-sizing: border-box;
   }
+  
   body {
+    background: url('https://static.vecteezy.com/system/resources/thumbnails/038/956/034/small_2x/ai-generated-futuristic-esport-background-for-gaming-live-streaming-esport-game-tournament-competition-neon-banner-photo.jpeg');
     font-family: Arial, Tahoma, sans-serif;
   }
   .control-buttons {
