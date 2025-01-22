@@ -232,7 +232,7 @@ new Chart(gameDistributionCtx, {
   let editingTournamentId = null;
 
   // Fetch and initialize tournaments
-  fetch("/tournaments-management/data.json") // or your actual path
+  fetch("/admin-dashboard/tournaments-management/data.json") // or your actual path
     .then((response) => response.json())
     .then((data) => {
       tournaments = data;

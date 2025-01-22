@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gaming Admin Platform</title>
     <!-- Main CSS -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/admin-dashboard/style.css" />
 
     <!-- Font Awesome CDN -->
     <link
@@ -17,9 +17,12 @@
     />
 
     <!-- Additional CSS -->
-    <link rel="stylesheet" href="/user-management/user.css" />
-    <link rel="stylesheet" href="/game-management/game.css" />
-    <link rel="stylesheet" href="/events-management/event.css" />
+    <link rel="stylesheet" href="/admin-dashboard/user-management/user.css" />
+    <link rel="stylesheet" href="/admin-dashboard/game-management/game.css" />
+    <link
+      rel="stylesheet"
+      href="/admin-dashboard/events-management/event.css"
+    />
 
     <!-- Charts & Icons -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -323,7 +326,11 @@
                   class="tournament_search_input"
                 />
               </div>
-              <button id="tournament_add_btn" class="event_primary_btn" style="background-color: cornflowerblue;">
+              <button
+                id="tournament_add_btn"
+                class="event_primary_btn"
+                style="background-color: cornflowerblue"
+              >
                 <i data-lucide="plus-circle" class="event_btn_icon"></i>
                 Add New Tournament
               </button>
@@ -349,15 +356,27 @@
                 </div>
                 <div class="event_form_group">
                   <label for="event_description">Description</label>
-                  <textarea id="tournament_description" rows="3" required></textarea>
+                  <textarea
+                    id="tournament_description"
+                    rows="3"
+                    required
+                  ></textarea>
                 </div>
                 <div class="event_form_group">
                   <label for="tournament_team_name">Team Name</label>
-                  <textarea id="tournament_team_name" rows="3" required></textarea>
+                  <textarea
+                    id="tournament_team_name"
+                    rows="3"
+                    required
+                  ></textarea>
                 </div>
                 <div class="event_form_group">
                   <label for="tournament_category">Category</label>
-                  <textarea id="tournament_category" rows="3" required></textarea>
+                  <textarea
+                    id="tournament_category"
+                    rows="3"
+                    required
+                  ></textarea>
                 </div>
                 <div class="event_form_group">
                   <label for="tournament_image">Image URL</label>
@@ -385,9 +404,9 @@
     </div>
 
     <!-- Scripts -->
-    <script src="main.js"></script>
-    <script src="/user-management/user.js"></script>
-    <script src="/game-management/game.js"></script>
+    <script src="/admin-dashboard/main.js"></script>
+    <script src="/admin-dashboard/user-management/user.js"></script>
+    <script src="/admin-dashboard/game-management/game.js"></script>
     <script>
       lucide.createIcons();
     </script>
