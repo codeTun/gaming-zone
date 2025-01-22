@@ -11,5 +11,5 @@ function validatePasswords() {
 }
 
 function redirectToLogin() {
-  window.location.href = "../../home.html";
+  window.location.href = "/";
 }

@@ -4,7 +4,7 @@ lucide.createIcons();
 // Handle Logout
 function handleLogout() {
   console.log("Logging out...");
-  window.location.href = "../home.html";
+  window.location.href = "/";
   // Implement actual logout logic here
 }
 
