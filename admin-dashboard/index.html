@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gaming Admin Platform</title>
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-..."
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Additional CSS -->
+    <link rel="stylesheet" href="/user-management/user.css" />
+    <link rel="stylesheet" href="/game-management/game.css" />
+    <link rel="stylesheet" href="/events-management/event.css" />
+
+    <!-- Charts & Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/lucide.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>Gaming Admin</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" data-section="dashboard">
+            <i class="fas fa-home"></i>
+            Dashboard
+          </a>
+          <a href="#" class="nav-item" data-section="users">
+            <i class="fas fa-users"></i>
+            User Management
+          </a>
+          <a href="#" class="nav-item" data-section="games">
+            <i class="fas fa-gamepad"></i>
+            Games Management
+          </a>
+          <a href="#" class="nav-item" data-section="events">
+            <i class="fas fa-calendar-alt"></i>
+            Events Management
+          </a>
+          <a href="#" class="nav-item" data-section="tournaments">
+            <i class="fas fa-trophy"></i>
+            Tournament Management
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="search-bar">
+            <input type="text" placeholder="Search..." />
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="user-profile">
+            <span>Admin User</span>
+            <i class="fas fa-user-circle"></i>
+          </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <div class="content-section active" id="dashboard">
+          <h1>Dashboard Overview</h1>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <i class="fas fa-users"></i>
+              <h3>Total Users</h3>
+              <p id="total-users">1,234</p>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-gamepad"></i>
+              <h3>Active Games</h3>
+              <p>45</p>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-calendar-alt"></i>
+              <h3>Upcoming Events</h3>
+              <p>12</p>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-trophy"></i>
+              <h3>Active Tournaments</h3>
+              <p>8</p>
+            </div>
+          </div>
+          <div class="charts-container">
+            <div class="chart-card">
+              <h3>User Growth</h3>
+              <canvas id="userGrowthChart"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>Game Distribution</h3>
+              <canvas id="gameDistributionChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div class="content-section" id="users">
+          <h1>User Management</h1>
+          <div class="placeholder-content">
+            <div class="container">
+              <main class="main-section">
+                <div class="stats-container">
+                  <div class="stat-card">
+                    <h3>👥 Total Users</h3>
+                    <p id="total-users">3</p>
+                  </div>
+                  <div class="stat-card">
+                    <h3>🚫 Banned Users</h3>
+                    <p id="banned-users">0</p>
+                  </div>
+                </div>
+                <div class="users-list-container">
+                  <h2>👤 User Management</h2>
+                  <div class="users-table">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Username</th>
+                          <th>Email</th>
+                          <th>Status</th>
+                          <th>Join Date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="users-table-body">
+                        <!-- User rows will be populated here -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </main>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Management Section -->
+        <div class="content-section" id="games">
+          <div class="game_container">
+            <!-- Header -->
+            <div class="game_header">
+              <h1>Games Management Dashboard</h1>
+              <p>Monitor and manage your game portfolio</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="game_stats_grid">
+              <div class="game_stat_card">
+                <div>
+                  <p class="game_stat_label">Total Games</p>
+                  <h3 id="game_total_games" class="game_stat_value">0</h3>
+                </div>
+                <i data-lucide="gamepad" class="game_icon game_purple"></i>
+              </div>
+
+              <div class="game_stat_card">
+                <div>
+                  <p class="game_stat_label">Total Players</p>
+                  <h3 id="game_total_players" class="game_stat_value">0</h3>
+                </div>
+                <i data-lucide="users" class="game_icon game_blue"></i>
+              </div>
+
+              <div class="game_stat_card">
+                <div>
+                  <p class="game_stat_label">Average Rating</p>
+                  <h3 id="game_average_rating" class="game_stat_value">0</h3>
+                </div>
+                <i data-lucide="star" class="game_icon game_yellow"></i>
+              </div>
+
+              <div class="game_stat_card">
+                <div>
+                  <p class="game_stat_label">Active Users</p>
+                  <h3 id="game_active_users" class="game_stat_value">2.4k</h3>
+                </div>
+                <i data-lucide="trending-up" class="game_icon game_green"></i>
+              </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="game_search_filter">
+              <div class="game_search_container">
+                <i data-lucide="search" class="game_search_icon"></i>
+                <input
+                  type="text"
+                  id="game_search_input"
+                  placeholder="Search games..."
+                />
+              </div>
+              <div class="game_filter_container">
+                <i data-lucide="filter" class="game_filter_icon"></i>
+                <select id="game_genre_filter">
+                  <option value="All">All</option>
+                  <option value="Action">Action</option>
+                  <option value="RPG">RPG</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Strategy">Strategy</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Games Table -->
+            <div class="game_table_container">
+              <table class="game_table">
+                <thead>
+                  <tr>
+                    <th>Game Name</th>
+                    <th>Genre</th>
+                    <th>Rating</th>
+                    <th>Players</th>
+                    <th>Release Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="game_table_body">
+                  <!-- Table rows will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Events Management Section -->
+        <div class="content-section" id="events">
+          <div class="event_container">
+            <!-- Header -->
+            <div class="event_header">
+              <h1>Events Management</h1>
+              <p>Manage your gaming events and news</p>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="event_action_bar">
+              <div class="event_search_container">
+                <i data-lucide="search" class="event_search_icon"></i>
+                <input
+                  type="text"
+                  id="event_search_input"
+                  placeholder="Search events..."
+                />
+              </div>
+              <button id="event_add_btn" class="event_primary_btn">
+                <i data-lucide="plus-circle" class="event_btn_icon"></i>
+                Add New Event
+              </button>
+            </div>
+
+            <!-- Events Grid -->
+            <div class="event_grid" id="event_grid"></div>
+          </div>
+
+          <!-- Modal -->
+          <div class="event_modal" id="event_modal">
+            <div class="event_modal_content">
+              <div class="event_modal_header">
+                <h2 id="event_modal_title">Add New Event</h2>
+                <button class="event_close_btn" id="event_close_modal">
+                  <i data-lucide="x" class="event_close_icon"></i>
+                </button>
+              </div>
+              <form id="event_form" class="event_form">
+                <div class="event_form_group">
+                  <label for="event_title">Title</label>
+                  <input type="text" id="event_title" required />
+                </div>
+                <div class="event_form_group">
+                  <label for="event_description">Description</label>
+                  <textarea id="event_description" rows="3" required></textarea>
+                </div>
+                <div class="event_form_group">
+                  <label for="event_image">Image URL</label>
+                  <input type="text" id="event_image" required />
+                </div>
+                <div class="event_form_group">
+                  <label for="event_date">Date</label>
+                  <input type="date" id="event_date" required />
+                </div>
+                <div class="event_form_actions">
+                  <button
+                    type="button"
+                    class="event_secondary_btn"
+                    id="event_cancel_btn"
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" class="event_primary_btn">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tournament Management Section -->
+        <div class="content-section" id="tournaments">
+          <div class="event_container">
+            <!-- Header -->
+            <div class="event_header">
+              <h1>Tournaments Management</h1>
+              <p>Manage your gaming Tournaments</p>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="event_action_bar">
+              <div class="tournament_search_wrapper">
+                <i data-lucide="search" class="tournament_search_icon"></i>
+                <input
+                  type="text"
+                  id="tournament_search_input"
+                  placeholder="Tournament Search..."
+                  class="tournament_search_input"
+                />
+              </div>
+              <button id="tournament_add_btn" class="event_primary_btn" style="background-color: cornflowerblue;">
+                <i data-lucide="plus-circle" class="event_btn_icon"></i>
+                Add New Tournament
+              </button>
+            </div>
+
+            <!-- Tournament Grid -->
+            <div class="event_grid" id="tournament_grid"></div>
+          </div>
+
+          <!-- Modal -->
+          <div class="event_modal" id="tournament_modal">
+            <div class="event_modal_content">
+              <div class="event_modal_header">
+                <h2 id="tournament_modal_title">Add New Tournament</h2>
+                <button class="event_close_btn" id="tournament_close_modal">
+                  <i data-lucide="x" class="event_close_icon"></i>
+                </button>
+              </div>
+              <form id="tournament_form" class="event_form">
+                <div class="event_form_group">
+                  <label for="tournament_title">Title</label>
+                  <input type="text" id="tournament_title" required />
+                </div>
+                <div class="event_form_group">
+                  <label for="event_description">Description</label>
+                  <textarea id="tournament_description" rows="3" required></textarea>
+                </div>
+                <div class="event_form_group">
+                  <label for="tournament_team_name">Team Name</label>
+                  <textarea id="tournament_team_name" rows="3" required></textarea>
+                </div>
+                <div class="event_form_group">
+                  <label for="tournament_category">Category</label>
+                  <textarea id="tournament_category" rows="3" required></textarea>
+                </div>
+                <div class="event_form_group">
+                  <label for="tournament_image">Image URL</label>
+                  <input type="text" id="tournament_image" required />
+                </div>
+                <div class="event_form_group">
+                  <label for="tournament_date">Date</label>
+                  <input type="date" id="tournament_date" required />
+                </div>
+                <div class="event_form_actions">
+                  <button
+                    type="button"
+                    class="event_secondary_btn"
+                    id="tournament_cancel_btn"
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" class="event_primary_btn">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="main.js"></script>
+    <script src="/user-management/user.js"></script>
+    <script src="/game-management/game.js"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

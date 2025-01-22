@@ -1,0 +1,275 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background-color: #111827;
+  color: #f3f4f6;
+  min-height: 100vh;
+}
+
+/* Layout */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 256px;
+  background-color: #1f2937;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Profile section */
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.avatar-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #a855f7;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 16px;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  border: 2px solid #1f2937;
+}
+
+.username {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.welcome-text {
+  color: #a855f7;
+  font-size: 0.875rem;
+}
+
+/* Navigation menu */
+.nav-menu {
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: #d1d5db;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s;
+}
+
+.nav-item:hover {
+  background-color: #374151;
+  color: white;
+}
+
+.nav-item i {
+  margin-right: 0.75rem;
+  color: #a855f7;
+}
+
+.nav-item .chevron {
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.nav-item:hover .chevron {
+  opacity: 1;
+}
+
+/* Updated Logout Button to Red */
+.logout-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  color: #ffffff; /* White text */
+  background-color: #ef4444; /* Red background */
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #dc2626; /* Darker red on hover */
+  color: #ffffff; /* Keep text white */
+}
+
+.logout-btn i {
+  margin-right: 0.75rem;
+  color: #ffffff; /* Ensure icon is white */
+}
+/* Sidebar footer */
+.sidebar-footer {
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid #374151;
+  text-align: center;
+}
+
+.sidebar-footer p {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+.content-container {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.main-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(to right, #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Feature grid */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.feature-card {
+  background-color: rgba(31, 41, 55, 0.5);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #374151;
+  transition: border-color 0.2s;
+}
+
+.feature-card:hover {
+  border-color: #a855f7;
+}
+
+.feature-card i {
+  color: #a855f7;
+  margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  color: #9ca3af;
+}
+
+/* CTA section */
+.cta-section {
+  background: linear-gradient(
+    to bottom right,
+    rgba(88, 28, 135, 0.5),
+    rgba(157, 23, 77, 0.5)
+  );
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.cta-section h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  color: #d1d5db;
+  margin-bottom: 1.5rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #a855f7;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #9333ea;
+}
+
+.btn-secondary {
+  background-color: #374151;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #4b5563;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+}
+

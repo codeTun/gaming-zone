@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "title": "Valorant Champions Tour",
+    "category": "fps",
+    "image": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=2070&h=800",
+    "prizePool": "$100,000",
+    "date": "2024-03-15",
+    "time": "18:00 GMT",
+    "maxTeams": 32,
+    "currentTeams": 28,
+    "format": "5v5 Double Elimination"
+  },
+  {
+    "id": 2,
+    "title": "League of Legends World Cup",
+    "category": "moba",
+    "image": "https://images.unsplash.com/photo-1542751110-97427bbecf7a?auto=format&fit=crop&q=80&w=2070&h=800",
+    "prizePool": "$200,000",
+    "date": "2024-04-01",
+    "time": "16:00 GMT",
+    "maxTeams": 16,
+    "currentTeams": 12,
+    "format": "5v5 Single Elimination"
+  },
+  {
+    "id": 3,
+    "title": "Fortnite Championship",
+    "category": "battle-royale",
+    "image": "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&q=80&w=2070&h=800",
+    "prizePool": "$150,000",
+    "date": "2024-03-20",
+    "time": "20:00 GMT",
+    "maxTeams": 50,
+    "currentTeams": 42,
+    "format": "Solo & Duo Matches"
+  },
+  {
+    "id": 4,
+    "title": "Gran Turismo World Series",
+    "category": "racing",
+    "image": "https://images.unsplash.com/photo-1547394765-185e1e68f34e?auto=format&fit=crop&q=80&w=2070&h=800",
+    "prizePool": "$75,000",
+    "date": "2024-04-10",
+    "time": "19:00 GMT",
+    "maxTeams": 24,
+    "currentTeams": 20,
+    "format": "Time Trial & Race"
+  },
+  {
+    "id": 5,
+    "title": "Street Fighter VI Pro Tour",
+    "category": "fighting",
+    "image": "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?auto=format&fit=crop&q=80&w=2070&h=800",
+    "prizePool": "$50,000",
+    "date": "2024-03-25",
+    "time": "17:00 GMT",
+    "maxTeams": 64,
+    "currentTeams": 45,
+    "format": "1v1 Double Elimination"
+  }
+]

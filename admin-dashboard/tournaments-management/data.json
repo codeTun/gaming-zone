@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Pro League Battle",
+    "description": "Competitive tournament for experienced players fighting for the grand title.",
+    "image": "https://th.bing.com/th/id/OIP.UyOeF_eNaUmiZNNQHZ3e0QHaEK?rs=1&pid=ImgDetMain",
+    "date": "2024-08-10"
+  },
+  {
+    "id": 2,
+    "title": "Beginner Showdown",
+    "description": "An entry-level tournament designed for new players to hone their skills.",
+    "image": "https://th.bing.com/th/id/R.e292490e825cbfa030a9c90d2286576b?rik=AUJeU8F238kXIw&pid=ImgRaw&r=0",
+    "date": "2024-09-15"
+  },
+  {
+    "id": 3,
+    "title": "Arcade Masters Cup",
+    "description": "Classic arcade game tournament featuring retro favorites.",
+    "image": "https://images.start.gg/images/tournament/431807/image-f1add032eab88e349e74c51071f9d08f.jpg?ehk=DY7f%2BZw8dVpCI9otXW4UyLqpZkwplZLcT6WCHfzBFY0%3D&ehkOptimized=g2O5%2BTupGuQ%2BcXSITF2q1p6W2o7Kya%2FgJtLcXpI0T%2B4%3D",
+    "date": "2024-10-01"
+  }
+]

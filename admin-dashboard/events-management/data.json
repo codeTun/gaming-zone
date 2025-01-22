@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Summer Gaming Championship",
+    "description": "Join us for the biggest gaming tournament of the summer! Compete in multiple games and win amazing prizes.",
+    "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "date": "2024-07-15"
+  },
+  {
+    "id": 2,
+    "title": "Game Developer Workshop",
+    "description": "Learn game development from industry experts...",
+    "image": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "date": "2024-08-01"
+  },
+  {
+    "id": 3,
+    "title": "Esports League Finals",
+    "description": "Watch the top teams compete for the championship...",
+    "image": "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "date": "2024-09-20"
+  }
+]

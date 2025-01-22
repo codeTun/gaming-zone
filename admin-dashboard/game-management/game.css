@@ -1,0 +1,222 @@
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.game_body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background-color: #111827;
+  color: white;
+  line-height: 1.5;
+}
+
+.game_container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Header */
+.game_header {
+  margin-bottom: 2rem;
+}
+
+.game_header h1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.game_header p {
+  color: #9ca3af;
+}
+
+/* Stats Grid */
+.game_stats_grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .game_stats_grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.game_stat_card {
+  background-color: #1f2937;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.game_stat_label {
+  color: #9ca3af;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.game_stat_value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.game_icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.game_purple {
+  color: #8b5cf6;
+}
+.game_blue {
+  color: #3b82f6;
+}
+.game_yellow {
+  color: #f59e0b;
+}
+.game_green {
+  color: #10b981;
+}
+
+/* Search and Filter */
+.game_search_filter {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .game_search_filter {
+    flex-direction: row;
+  }
+}
+
+.game_search_container {
+  flex: 1;
+  position: relative;
+}
+
+.game_search_icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+#game_search_input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+  background-color: #1f2937;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  outline: none;
+}
+
+#game_search_input:focus {
+  box-shadow: 0 0 0 2px #8b5cf6;
+}
+
+.game_filter_container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.game_filter_icon {
+  color: #9ca3af;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+#game_genre_filter {
+  padding: 0.5rem 0.75rem;
+  background-color: #1f2937;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  outline: none;
+}
+
+#game_genre_filter:focus {
+  box-shadow: 0 0 0 2px #8b5cf6;
+}
+
+/* Table */
+.game_table_container {
+  background-color: #1f2937;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.game_table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.game_table th {
+  background-color: #374151;
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.game_table td {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #374151;
+}
+
+.game_table tr:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+
+.game_genre_tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: rgba(139, 92, 246, 0.2);
+  color: #a78bfa;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+}
+
+.game_rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.game_rating i {
+  color: #f59e0b;
+  width: 1rem;
+  height: 1rem;
+}
+
+.game_delete_btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s;
+}
+
+.game_delete_btn:hover {
+  color: #dc2626;
+}
+
+.game_delete_btn i {
+  width: 1.25rem;
+  height: 1.25rem;
+}

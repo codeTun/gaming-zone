@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gaming Platform</title>
+    <link rel="stylesheet" href="/user-interface/global.css" />
+    <link rel="stylesheet" href="/user-interface/tournement/tournament.css" />
+    <link rel="stylesheet" href="/user-interface/games/style.css" />
+    <link rel="stylesheet" href="/user-interface/events/events.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- User Profile Section -->
+        <div class="profile">
+          <div class="avatar-container">
+            <img src="/user-interface/img/iheb.jpg" alt="Profile" class="avatar" />
+            <div class="status-indicator"></div>
+          </div>
+          <h2 class="username">Elazheri Iheb</h2>
+          <p class="welcome-text">Welcome back!</p>
+        </div>
+        <!-- Navigation -->
+        <nav class="nav-menu">
+          <a href="#" class="nav-item active" id="homeLink">
+            <i data-lucide="home"></i>
+            <span>Home</span>
+            <i data-lucide="chevron-right" class="chevron"></i>
+          </a>
+          <a href="#games" class="nav-item" id="gamesLink">
+            <i data-lucide="gamepad-2"></i>
+            <span>Games</span>
+            <i data-lucide="chevron-right" class="chevron"></i>
+          </a>
+          <a href="#tournament" class="nav-item" id="tournamentsLink">
+            <i data-lucide="trophy"></i>
+            <span>Tournaments</span>
+            <i data-lucide="chevron-right" class="chevron"></i>
+          </a>
+          <a href="#" class="nav-item" id="eventsLink">
+            <i data-lucide="calendar"></i>
+            <span>Events</span>
+            <i data-lucide="chevron-right" class="chevron"></i>
+          </a>
+        </nav>
+        <!-- Logout Button -->
+        <button class="logout-btn" onclick="handleLogout()">
+          <i data-lucide="log-out"></i>
+          <span>Logout</span>
+        </button>
+        <!-- Footer -->
+        <div class="sidebar-footer">
+          <p>Gaming Zone v1.0</p>
+        </div>
+      </div>
+
+      <!-- Home Section -->
+      <div class="main-content" id="homeSection">
+        <div class="content-container">
+          <h1 class="main-title">Welcome to Gaming Zone</h1>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <i data-lucide="gamepad-2"></i>
+              <h3>Featured Games</h3>
+              <p>Explore our collection of trending games and new releases.</p>
+            </div>
+            <div class="feature-card">
+              <i data-lucide="users"></i>
+              <h3>Active Players</h3>
+              <p>Join thousands of players in exciting multiplayer matches.</p>
+            </div>
+            <div class="feature-card">
+              <i data-lucide="flame"></i>
+              <h3>Live Tournaments</h3>
+              <p>Compete in tournaments and win amazing prizes.</p>
+            </div>
+          </div>
+          <div class="cta-section">
+            <h2>🎮 Ready to Play?</h2>
+            <p>
+              Choose from our extensive library of games, join tournaments, or
+              participate in upcoming events.
+            </p>
+            <div class="cta-buttons">
+              <button class="btn btn-primary" id="browseGamesBtn">
+                Browse Games
+              </button>
+              <button class="btn btn-secondary" id="viewTournamentsBtn">
+                View Tournaments
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Games Section (hidden by default) -->
+      <div class="main-content" id="gamesSection" style="display: none">
+        <div class="content-container">
+          <header>
+            <h1>Games Explorer</h1>
+            <div class="games-search-container">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search games..."
+              />
+              <i class="fas fa-search search-icon"></i>
+            </div>
+            <div class="filters">
+              <select id="gamesCategoryFilter">
+                <option value="">All Categories</option>
+                <option value="action">Action</option>
+                <option value="adventure">Adventure</option>
+                <option value="rpg">RPG</option>
+                <option value="sports">Sports</option>
+                <option value="strategy">Strategy</option>
+              </select>
+              <select id="gamesRatingFilter">
+                <option value="">All Ratings</option>
+                <option value="5">5 Stars</option>
+                <option value="4">4+ Stars</option>
+                <option value="3">3+ Stars</option>
+              </select>
+            </div>
+          </header>
+          <main id="gamesGrid">
+            <!-- Games will be injected here by main.js -->
+          </main>
+        </div>
+      </div>
+
+      <!-- Tournament Section (hidden by default) -->
+      <div class="main-content" id="tournamentSection" style="display: none">
+        <div class="content-container">
+          <div class="tournament-h1">
+            <h1 class="main-title">Available Tournaments</h1>
+            <!-- Search and Filter Section -->
+            <div class="tournament-search-container">
+              <div class="tournament-search-bar">
+                <input
+                  type="text"
+                  placeholder="Search tournaments..."
+                  id="tournamentSearchInput"
+                />
+              </div>
+              <div class="tournament-filter-section">
+                <select id="tournamentCategoryFilter">
+                  <option value="">All Categories</option>
+                  <option value="fps">FPS Games</option>
+                  <option value="moba">MOBA</option>
+                  <option value="battle-royale">Battle Royale</option>
+                  <option value="racing">Racing</option>
+                  <option value="fighting">Fighting Games</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- Tournaments Grid -->
+          <div class="tournament-grid" id="tournamentsGrid">
+            <!-- Tournament cards get injected by tournament.js -->
+          </div>
+        </div>
+      </div>
+      <!-- Events Section -->
+      <div class="main-content" id="eventsSection" style="display: none">
+        <div class="content-container">
+          <div class="events-h1">
+            <h1 class="main-title">Gaming Events</h1>
+            <div class="tournament-search-container">
+              <div class="tournament-search-bar">
+                <input
+                  type="text"
+                  id="eventSearchInput"
+                  placeholder="Search events..."
+                />
+              </div>
+              <div class="tournament-filter-section">
+                <select id="eventCategoryFilter">
+                  <option value="">All Categories</option>
+                  <option value="convention">Conventions</option>
+                  <option value="conference">Conference</option>
+                  <option value="meetup">Meetups</option>
+                  <option value="workshop">Workshops</option>
+                  <option value="launch">Game Launches</option>
+                </select>
+                <select id="eventCountryFilter">
+                  <option value="">All Countries</option>
+                  <option value="usa">United States</option>
+                  <option value="japan">Japan</option>
+                  <option value="uk">United Kingdom</option>
+                  <option value="germany">Germany</option>
+                  <option value="france">France</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="events-grid" id="eventsGrid">
+            <!-- Event cards will be injected by events.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tournament Registration Modal -->
+    <div class="tournament-modal" id="registrationModal">
+      <div class="tournament-modal-content">
+        <div class="tournament-modal-header">
+          <h2>Tournament Registration</h2>
+          <button class="tournament-modal-close" onclick="closeModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="tournament-modal-body">
+          <h3 id="tournamentTitle" class="tournament-item-title"></h3>
+          <form id="registrationForm" onsubmit="handleRegistration(event)">
+            <div class="tournament-form-group">
+              <label for="teamName">Team Name</label>
+              <input type="text" id="teamName" required />
+            </div>
+            <div class="tournament-form-group">
+              <label for="playerCount">Number of Players</label>
+              <input type="number" id="playerCount" min="1" max="5" required />
+            </div>
+            <div class="tournament-form-group">
+              <label for="contactEmail">Contact Email</label>
+              <input type="email" id="contactEmail" required />
+            </div>
+            <div class="tournament-form-group">
+              <label for="discordId">Discord ID</label>
+              <input type="text" id="discordId" required />
+            </div>
+            <div class="tournament-form-group">
+              <label for="experience">Team Experience Level</label>
+              <select id="experience" required>
+                <option value="">Select experience level</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="professional">Professional</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Register for Tournament
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Registration Modal -->
+    <div class="tournament-modal" id="eventRegistrationModal">
+      <div class="tournament-modal-content">
+        <div class="tournament-modal-header">
+          <h2>Event Registration</h2>
+          <button class="tournament-modal-close" onclick="closeEventModal()">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="tournament-modal-body">
+          <h3 id="eventTitle" class="tournament-item-title"></h3>
+          <form
+            id="eventRegistrationForm"
+            onsubmit="handleEventRegistration(event)"
+          >
+            <div class="tournament-form-group">
+              <label for="teamName">Team Name</label>
+              <input type="text" id="teamName" required />
+            </div>
+            <div class="tournament-form-group">
+              <label for="playerCount">Number of Players</label>
+              <input type="number" id="playerCount" min="1" max="5" required />
+            </div>
+            <div class="tournament-form-group">
+              <label for="contactEmail">Contact Email</label>
+              <input type="email" id="contactEmail" required />
+            </div>
+            <div class="tournament-form-group">
+              <label for="discordId">Discord ID</label>
+              <input type="text" id="discordId" required />
+            </div>
+            <div class="tournament-form-group">
+              <label for="experience">Team Experience Level</label>
+              <select id="experience" required>
+                <option value="">Select experience level</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="professional">Professional</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Register for Event
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="/user-interface/main.js"></script>
+    <script src="/user-interface/tournement/tournament.js"></script>
+    <script src="/user-interface/games/main.js"></script>
+    <script src="/user-interface/events/events.js"></script>
+  </body>
+</html>
