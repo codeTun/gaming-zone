@@ -103,6 +103,35 @@ CREATE TABLE UserGame (
     FOREIGN KEY (gameId) REFERENCES Game(id) ON DELETE CASCADE
 );
 
+-- Create TournamentRegistration table
+CREATE TABLE TournamentRegistration (
+    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    userId VARCHAR(36) NOT NULL,
+    tournamentId VARCHAR(36) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    teamName VARCHAR(100) NOT NULL,
+    registeredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('PENDING', 'CONFIRMED', 'CANCELLED') DEFAULT 'PENDING',
+    UNIQUE KEY unique_user_tournament (userId, tournamentId),
+    FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (tournamentId) REFERENCES Tournament(id) ON DELETE CASCADE
+);
+
+-- Create EventRegistration table
+CREATE TABLE EventRegistration (
+    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    userId VARCHAR(36) NOT NULL,
+    eventId VARCHAR(36) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    registeredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('PENDING', 'CONFIRMED', 'CANCELLED') DEFAULT 'PENDING',
+    UNIQUE KEY unique_user_event (userId, eventId),
+    FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (eventId) REFERENCES Event(id) ON DELETE CASCADE
+);
+
 -- Insert sample categories
 INSERT INTO Category (name) VALUES 
 ('Action'),
@@ -111,3 +140,20 @@ INSERT INTO Category (name) VALUES
 ('Strategy'),
 ('Sports'),
 ('Racing');
+
+-- Insert sample content and games
+INSERT INTO ContentItem (id, name, description, imageUrl, type) VALUES 
+('game-001', 'Space Shooter', 'Classic arcade space shooting game', 'https://example.com/space-shooter.jpg', 'GAME'),
+('game-002', 'Puzzle Master', 'Mind-bending puzzle challenges', 'https://example.com/puzzle-master.jpg', 'GAME'),
+('tournament-001', 'Spring Gaming Championship', 'Annual gaming tournament with cash prizes', 'https://example.com/tournament.jpg', 'TOURNAMENT'),
+('event-001', 'Gaming Convention 2024', 'Meet fellow gamers and try new games', 'https://example.com/convention.jpg', 'EVENT');
+
+INSERT INTO Game (id, categoryId, minAge, targetGender, averageRating) VALUES 
+('game-001', (SELECT id FROM Category WHERE name = 'Action'), 13, NULL, 4.5),
+('game-002', (SELECT id FROM Category WHERE name = 'Puzzle'), 8, NULL, 4.2);
+
+INSERT INTO Tournament (id, startDate, endDate, prizePool) VALUES 
+('tournament-001', '2024-06-01 09:00:00', '2024-06-03 18:00:00', 5000.00);
+
+INSERT INTO Event (id, place, startDate) VALUES 
+('event-001', 'Convention Center Downtown', '2024-05-15 10:00:00');
