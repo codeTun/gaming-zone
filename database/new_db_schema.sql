@@ -78,6 +78,7 @@ CREATE TABLE Tournament (
     startDate DATETIME NOT NULL,
     endDate DATETIME NOT NULL,
     prizePool DECIMAL(10,2) NULL,
+    maxParticipants INT NOT NULL DEFAULT 50,
     FOREIGN KEY (id) REFERENCES ContentItem(id) ON DELETE CASCADE
 );
 
@@ -141,8 +142,8 @@ INSERT INTO Game (id, categoryId, minAge, targetGender, averageRating) VALUES
 ('game-001', 'cat-001', 13, NULL, 4.5),
 ('game-002', 'cat-003', 8, NULL, 4.2);
 
-INSERT INTO Tournament (id, startDate, endDate, prizePool) VALUES 
-('tournament-001', '2024-06-01 09:00:00', '2024-06-03 18:00:00', 5000.00);
+INSERT INTO Tournament (id, startDate, endDate, prizePool, maxParticipants) VALUES 
+('tournament-001', '2024-06-01 09:00:00', '2024-06-03 18:00:00', 5000.00, 100);
 
 INSERT INTO Event (id, place, startDate) VALUES 
 ('event-001', 'Convention Center Downtown', '2024-05-15 10:00:00');

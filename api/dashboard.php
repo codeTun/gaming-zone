@@ -49,7 +49,8 @@ try {
 
     // Tournaments
     $stmt = $pdo->query("
-        SELECT ci.id, ci.name, ci.description, ci.imageUrl, t.startDate, t.endDate, t.prizePool, ci.createdAt
+        SELECT ci.id, ci.name, ci.description, ci.imageUrl, t.startDate, t.endDate, t.prizePool, t.maxParticipants, ci.createdAt,
+               (SELECT COUNT(*) FROM TournamentRegistration WHERE tournamentId = ci.id AND status != 'CANCELLED') as currentParticipants
         FROM ContentItem ci
         JOIN Tournament t ON ci.id = t.id
         WHERE ci.type = 'TOURNAMENT'
@@ -59,7 +60,7 @@ try {
 
     // Tournament Registrations
     $stmt = $pdo->query("
-        SELECT tr.*, u.name as fullName, ci.name as tournamentName, t.startDate, t.endDate, t.prizePool
+        SELECT tr.*, u.name as fullName, ci.name as tournamentName, t.startDate, t.endDate, t.prizePool, t.maxParticipants
         FROM TournamentRegistration tr 
         JOIN Users u ON tr.userId = u.id 
         JOIN ContentItem ci ON tr.tournamentId = ci.id 

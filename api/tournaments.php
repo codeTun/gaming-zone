@@ -22,7 +22,8 @@ try {
             if (isset($_GET['id'])) {
                 // Get specific tournament
                 $stmt = $pdo->prepare("
-                    SELECT ci.id, ci.name, ci.description, ci.imageUrl, t.startDate, t.endDate, t.prizePool, ci.createdAt
+                    SELECT ci.id, ci.name, ci.description, ci.imageUrl, t.startDate, t.endDate, t.prizePool, t.maxParticipants, ci.createdAt,
+                           (SELECT COUNT(*) FROM TournamentRegistration WHERE tournamentId = ci.id AND status != 'CANCELLED') as currentParticipants
                     FROM ContentItem ci
                     JOIN Tournament t ON ci.id = t.id
                     WHERE ci.id = ? AND ci.type = 'TOURNAMENT'
@@ -33,7 +34,8 @@ try {
             } else {
                 // Get all tournaments
                 $stmt = $pdo->query("
-                    SELECT ci.id, ci.name, ci.description, ci.imageUrl, t.startDate, t.endDate, t.prizePool, ci.createdAt
+                    SELECT ci.id, ci.name, ci.description, ci.imageUrl, t.startDate, t.endDate, t.prizePool, t.maxParticipants, ci.createdAt,
+                           (SELECT COUNT(*) FROM TournamentRegistration WHERE tournamentId = ci.id AND status != 'CANCELLED') as currentParticipants
                     FROM ContentItem ci
                     JOIN Tournament t ON ci.id = t.id
                     WHERE ci.type = 'TOURNAMENT'
@@ -63,14 +65,15 @@ try {
             
             // Insert into Tournament
             $stmt = $pdo->prepare("
-                INSERT INTO Tournament (id, startDate, endDate, prizePool) 
-                VALUES (?, ?, ?, ?)
+                INSERT INTO Tournament (id, startDate, endDate, prizePool, maxParticipants) 
+                VALUES (?, ?, ?, ?, ?)
             ");
             $stmt->execute([
                 $id,
                 $input['startDate'],
                 $input['endDate'],
-                $input['prizePool'] ?? null
+                $input['prizePool'] ?? null,
+                $input['maxParticipants'] ?? 50
             ]);
             
             $pdo->commit();
@@ -102,13 +105,14 @@ try {
             // Update Tournament
             $stmt = $pdo->prepare("
                 UPDATE Tournament 
-                SET startDate = ?, endDate = ?, prizePool = ? 
+                SET startDate = ?, endDate = ?, prizePool = ?, maxParticipants = ? 
                 WHERE id = ?
             ");
             $stmt->execute([
                 $input['startDate'],
                 $input['endDate'],
                 $input['prizePool'] ?? null,
+                $input['maxParticipants'] ?? 50,
                 $_GET['id']
             ]);
             

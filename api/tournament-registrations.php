@@ -22,7 +22,7 @@ try {
             if (isset($_GET['tournamentId'])) {
                 // Get all registrations for specific tournament
                 $stmt = $pdo->prepare("
-                    SELECT tr.*, u.name as fullName, ci.name as tournamentName, t.startDate, t.endDate, t.prizePool
+                    SELECT tr.*, u.name as fullName, ci.name as tournamentName, t.startDate, t.endDate, t.prizePool, t.maxParticipants
                     FROM TournamentRegistration tr 
                     JOIN Users u ON tr.userId = u.id 
                     JOIN ContentItem ci ON tr.tournamentId = ci.id 
@@ -35,7 +35,7 @@ try {
             } elseif (isset($_GET['userId'])) {
                 // Get all tournament registrations for specific user
                 $stmt = $pdo->prepare("
-                    SELECT tr.*, ci.name as tournamentName, t.startDate, t.endDate, t.prizePool
+                    SELECT tr.*, ci.name as tournamentName, t.startDate, t.endDate, t.prizePool, t.maxParticipants
                     FROM TournamentRegistration tr 
                     JOIN ContentItem ci ON tr.tournamentId = ci.id 
                     JOIN Tournament t ON tr.tournamentId = t.id
@@ -47,7 +47,7 @@ try {
             } else {
                 // Get all tournament registrations
                 $stmt = $pdo->query("
-                    SELECT tr.*, u.name as fullName, ci.name as tournamentName, t.startDate, t.endDate, t.prizePool
+                    SELECT tr.*, u.name as fullName, ci.name as tournamentName, t.startDate, t.endDate, t.prizePool, t.maxParticipants
                     FROM TournamentRegistration tr 
                     JOIN Users u ON tr.userId = u.id 
                     JOIN ContentItem ci ON tr.tournamentId = ci.id 
@@ -70,11 +70,22 @@ try {
                 break;
             }
             
-            // Validate that tournament exists
-            $stmt = $pdo->prepare("SELECT id FROM Tournament WHERE id = ?");
+            // Validate that tournament exists and get max participants
+            $stmt = $pdo->prepare("SELECT id, maxParticipants FROM Tournament WHERE id = ?");
             $stmt->execute([$input['tournamentId']]);
-            if (!$stmt->fetch()) {
+            $tournament = $stmt->fetch();
+            if (!$tournament) {
                 echo json_encode(['error' => 'Tournament not found']);
+                break;
+            }
+            
+            // Check current participants count
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM TournamentRegistration WHERE tournamentId = ? AND status != 'CANCELLED'");
+            $stmt->execute([$input['tournamentId']]);
+            $currentParticipants = $stmt->fetchColumn();
+            
+            if ($currentParticipants >= $tournament['maxParticipants']) {
+                echo json_encode(['error' => 'Tournament is full. Maximum participants reached.']);
                 break;
             }
             
