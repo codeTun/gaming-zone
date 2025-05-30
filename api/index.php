@@ -14,19 +14,28 @@ echo json_encode([
             'POST /api/auth/refresh-token.php' => 'Refresh JWT token'
         ],
         'games' => [
-            'GET /api/games/get-all.php' => 'Get all games',
-            'POST /api/games/create.php' => 'Create new game (Admin)',
+            'GET /api/games.php' => 'Get all games',
+            'GET /api/games.php?id={id}' => 'Get specific game',
+            'POST /api/games.php' => 'Create new game',
+            'PUT /api/games.php?id={id}' => 'Update game',
+            'DELETE /api/games.php?id={id}' => 'Delete game',
             'POST /api/games/rate.php' => 'Rate a game',
             'POST /api/games/play.php' => 'Record game play'
         ],
         'tournaments' => [
-            'GET /api/tournaments/get-all.php' => 'Get all tournaments',
-            'POST /api/tournaments/create.php' => 'Create tournament (Admin)',
+            'GET /api/tournaments.php' => 'Get all tournaments',
+            'GET /api/tournaments.php?id={id}' => 'Get specific tournament',
+            'POST /api/tournaments.php' => 'Create tournament',
+            'PUT /api/tournaments.php?id={id}' => 'Update tournament',
+            'DELETE /api/tournaments.php?id={id}' => 'Delete tournament',
             'POST /api/tournaments/register.php' => 'Register for tournament'
         ],
         'events' => [
-            'GET /api/events/get-all.php' => 'Get all events',
-            'POST /api/events/create.php' => 'Create event (Admin)',
+            'GET /api/events.php' => 'Get all events',
+            'GET /api/events.php?id={id}' => 'Get specific event',
+            'POST /api/events.php' => 'Create event',
+            'PUT /api/events.php?id={id}' => 'Update event',
+            'DELETE /api/events.php?id={id}' => 'Delete event',
             'POST /api/events/register.php' => 'Register for event'
         ],
         'categories' => [

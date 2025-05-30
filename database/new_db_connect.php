@@ -13,7 +13,7 @@ class DatabaseConnection {
             $host = EnvLoader::get('DB_HOST', 'localhost');
             $user = EnvLoader::get('DB_USERNAME', 'root');
             $pass = EnvLoader::get('DB_PASSWORD', '');
-            $dbname = EnvLoader::get('DB_NAME', 'gaming_zone_new');
+            $dbname = EnvLoader::get('DB_NAME', 'gaming_zone');
             
             $this->conn = new PDO(
                 "mysql:host={$host};dbname={$dbname};charset=utf8mb4", 

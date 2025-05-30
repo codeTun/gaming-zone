@@ -1,7 +1,6 @@
-
--- Create User table
-CREATE TABLE User (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+-- Create Users table
+CREATE TABLE Users (
+    id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -16,25 +15,25 @@ CREATE TABLE User (
 
 -- Create Token table
 CREATE TABLE Token (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) PRIMARY KEY,
     token VARCHAR(255) NOT NULL UNIQUE,
     type VARCHAR(50) NOT NULL DEFAULT 'AUTH',
     expiresAt TIMESTAMP NULL,
     userId VARCHAR(36) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE
+    FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 -- Create Category table
 CREATE TABLE Category (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create ContentItem table (base table for inheritance)
 CREATE TABLE ContentItem (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
     description TEXT,
     imageUrl VARCHAR(500) NULL,
@@ -55,13 +54,13 @@ CREATE TABLE Game (
 
 -- Create GameRating table
 CREATE TABLE GameRating (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) PRIMARY KEY,
     userId VARCHAR(36) NOT NULL,
     gameId VARCHAR(36) NOT NULL,
     rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
     ratedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY unique_user_game_rating (userId, gameId),
-    FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (gameId) REFERENCES Game(id) ON DELETE CASCADE
 );
 
@@ -84,18 +83,18 @@ CREATE TABLE Tournament (
 
 -- Create UserGame table
 CREATE TABLE UserGame (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) PRIMARY KEY,
     userId VARCHAR(36) NOT NULL,
     gameId VARCHAR(36) NOT NULL,
     score INT NOT NULL DEFAULT 0,
     playedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (gameId) REFERENCES Game(id) ON DELETE CASCADE
 );
 
 -- Create TournamentRegistration table
 CREATE TABLE TournamentRegistration (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) PRIMARY KEY,
     userId VARCHAR(36) NOT NULL,
     tournamentId VARCHAR(36) NOT NULL,
     username VARCHAR(50) NOT NULL,
@@ -104,13 +103,13 @@ CREATE TABLE TournamentRegistration (
     registeredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('PENDING', 'CONFIRMED', 'CANCELLED') DEFAULT 'PENDING',
     UNIQUE KEY unique_user_tournament (userId, tournamentId),
-    FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (tournamentId) REFERENCES Tournament(id) ON DELETE CASCADE
 );
 
 -- Create EventRegistration table
 CREATE TABLE EventRegistration (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) PRIMARY KEY,
     userId VARCHAR(36) NOT NULL,
     eventId VARCHAR(36) NOT NULL,
     username VARCHAR(50) NOT NULL,
@@ -118,20 +117,20 @@ CREATE TABLE EventRegistration (
     registeredAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('PENDING', 'CONFIRMED', 'CANCELLED') DEFAULT 'PENDING',
     UNIQUE KEY unique_user_event (userId, eventId),
-    FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (eventId) REFERENCES Event(id) ON DELETE CASCADE
 );
 
--- Insert sample categories
-INSERT INTO Category (name) VALUES 
-('Action'),
-('Adventure'),
-('Puzzle'),
-('Strategy'),
-('Sports'),
-('Racing');
+-- Insert sample categories with fixed IDs
+INSERT INTO Category (id, name) VALUES 
+('cat-001', 'Action'),
+('cat-002', 'Adventure'),
+('cat-003', 'Puzzle'),
+('cat-004', 'Strategy'),
+('cat-005', 'Sports'),
+('cat-006', 'Racing');
 
--- Insert sample content and games
+-- Insert sample content and games with explicit UUIDs
 INSERT INTO ContentItem (id, name, description, imageUrl, type) VALUES 
 ('game-001', 'Space Shooter', 'Classic arcade space shooting game', 'https://example.com/space-shooter.jpg', 'GAME'),
 ('game-002', 'Puzzle Master', 'Mind-bending puzzle challenges', 'https://example.com/puzzle-master.jpg', 'GAME'),
@@ -139,8 +138,8 @@ INSERT INTO ContentItem (id, name, description, imageUrl, type) VALUES
 ('event-001', 'Gaming Convention 2024', 'Meet fellow gamers and try new games', 'https://example.com/convention.jpg', 'EVENT');
 
 INSERT INTO Game (id, categoryId, minAge, targetGender, averageRating) VALUES 
-('game-001', (SELECT id FROM Category WHERE name = 'Action'), 13, NULL, 4.5),
-('game-002', (SELECT id FROM Category WHERE name = 'Puzzle'), 8, NULL, 4.2);
+('game-001', 'cat-001', 13, NULL, 4.5),
+('game-002', 'cat-003', 8, NULL, 4.2);
 
 INSERT INTO Tournament (id, startDate, endDate, prizePool) VALUES 
 ('tournament-001', '2024-06-01 09:00:00', '2024-06-03 18:00:00', 5000.00);
