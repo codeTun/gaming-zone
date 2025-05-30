@@ -44,8 +44,8 @@ try {
             break;
 
         case 'POST':
-            // Create new tournament
-            $id = 'tournament-' . uniqid();
+            // Create new tournament - auto-generate ID if not provided
+            $id = isset($input['id']) ? $input['id'] : 'tournament-' . uniqid();
             
             $pdo->beginTransaction();
             

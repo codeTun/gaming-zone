@@ -48,8 +48,8 @@ try {
             break;
 
         case 'POST':
-            // Create new game
-            $id = 'game-' . uniqid();
+            // Create new game - auto-generate ID if not provided
+            $id = isset($input['id']) ? $input['id'] : 'game-' . uniqid();
             
             $pdo->beginTransaction();
             

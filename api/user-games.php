@@ -59,7 +59,8 @@ try {
             break;
 
         case 'POST':
-            $id = 'usergame-' . uniqid();
+            // Create new user game record - auto-generate ID if not provided
+            $id = isset($input['id']) ? $input['id'] : 'usergame-' . uniqid();
             $stmt = $pdo->prepare("
                 INSERT INTO UserGame (id, userId, gameId, score) 
                 VALUES (?, ?, ?, ?)

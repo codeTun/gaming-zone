@@ -31,7 +31,8 @@ try {
             break;
 
         case 'POST':
-            $id = 'cat-' . uniqid();
+            // Create new category - auto-generate ID if not provided
+            $id = isset($input['id']) ? $input['id'] : 'cat-' . uniqid();
             $stmt = $pdo->prepare("INSERT INTO Category (id, name) VALUES (?, ?)");
             $stmt->execute([$id, $input['name']]);
             echo json_encode(['success' => true, 'id' => $id, 'message' => 'Category created successfully']);

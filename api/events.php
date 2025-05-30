@@ -44,8 +44,8 @@ try {
             break;
 
         case 'POST':
-            // Create new event
-            $id = 'event-' . uniqid();
+            // Create new event - auto-generate ID if not provided
+            $id = isset($input['id']) ? $input['id'] : 'event-' . uniqid();
             
             $pdo->beginTransaction();
             

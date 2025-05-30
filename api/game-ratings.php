@@ -44,6 +44,7 @@ try {
             break;
 
         case 'POST':
+            // Auto-generate ID (already correct)
             $id = 'rating-' . uniqid();
             
             $pdo->beginTransaction();

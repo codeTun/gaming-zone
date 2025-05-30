@@ -37,7 +37,8 @@ try {
             break;
 
         case 'POST':
-            $id = 'user-' . uniqid();
+            // Create new user - auto-generate ID if not provided
+            $id = isset($input['id']) ? $input['id'] : 'user-' . uniqid();
             $hashedPassword = password_hash($input['password'], PASSWORD_DEFAULT);
             
             $stmt = $pdo->prepare("
