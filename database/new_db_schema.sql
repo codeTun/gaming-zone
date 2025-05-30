@@ -1,13 +1,3 @@
--- Drop tables if they exist (in reverse order of creation to respect foreign key constraints)
-DROP TABLE IF EXISTS UserGame;
-DROP TABLE IF EXISTS GameRating;
-DROP TABLE IF EXISTS Tournament;
-DROP TABLE IF EXISTS Event;
-DROP TABLE IF EXISTS Game;
-DROP TABLE IF EXISTS ContentItem;
-DROP TABLE IF EXISTS Category;
-DROP TABLE IF EXISTS Token;
-DROP TABLE IF EXISTS User;
 
 -- Create User table
 CREATE TABLE User (
