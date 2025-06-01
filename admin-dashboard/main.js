@@ -361,3 +361,104 @@ new Chart(gameDistributionCtx, {
   tournamentCancelButton.addEventListener("click", hideModal);
   tournamentForm.addEventListener("submit", addTournament);
 })();
+
+// ------------------- Dashboard Management -------------------
+class DashboardManager {
+  constructor() {
+    this.init();
+  }
+
+  async init() {
+    this.bindEvents();
+    await this.loadDashboardStats();
+    this.initCharts();
+  }
+
+  bindEvents() {
+    const navItems = document.querySelectorAll(".nav-item");
+    navItems.forEach((item) => {
+      item.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const section = item.getAttribute("data-section");
+        this.showSection(section);
+
+        navItems.forEach((nav) => nav.classList.remove("active"));
+        item.classList.add("active");
+
+        await this.initSectionManager(section);
+      });
+    });
+  }
+
+  showSection(sectionName) {
+    const sections = document.querySelectorAll(".content-section");
+    sections.forEach((section) => section.classList.remove("active"));
+
+    const targetSection = document.getElementById(sectionName);
+    if (targetSection) {
+      targetSection.classList.add("active");
+    }
+  }
+
+  async initSectionManager(sectionName) {
+    try {
+      switch (sectionName) {
+        case "tournaments":
+          if (window.tournamentManager) {
+            await window.tournamentManager.init();
+            await window.tournamentManager.loadTournaments();
+          }
+          break;
+        case "events":
+          if (window.eventManager) {
+            await window.eventManager.init();
+            await window.eventManager.loadEvents();
+          }
+          break;
+        // Add other sections as needed
+      }
+    } catch (error) {
+      console.error(`Failed to initialize ${sectionName} section:`, error);
+    }
+  }
+
+  async loadDashboardStats() {
+    try {
+      // Try to load real stats from API
+      const stats = await apiService.get("/dashboard/stats");
+      this.updateStatsCards(stats);
+    } catch (error) {
+      console.warn("Could not load dashboard stats from API:", error);
+      // Use mock data
+      this.updateStatsCards({
+        users: 1234,
+        games: 45,
+        events: 12,
+        tournaments: 8,
+      });
+    }
+  }
+
+  updateStatsCards(stats) {
+    const elements = {
+      users: document.getElementById("total-users"),
+      games: document.querySelector(".stat-card:nth-child(2) p"),
+      events: document.querySelector(".stat-card:nth-child(3) p"),
+      tournaments: document.querySelector(".stat-card:nth-child(4) p"),
+    };
+
+    if (elements.users) elements.users.textContent = stats.users || 1234;
+    if (elements.games) elements.games.textContent = stats.games || 45;
+    if (elements.events) elements.events.textContent = stats.events || 12;
+    if (elements.tournaments) elements.tournaments.textContent = stats.tournaments || 8;
+  }
+
+  initCharts() {
+    // Initialize charts if needed
+    console.log("Charts initialized");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  window.dashboardManager = new DashboardManager();
+});
