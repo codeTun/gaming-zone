@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="tournement/tournament.css" />
     <link rel="stylesheet" href="games/style.css" />
     <link rel="stylesheet" href="events/events.css" />
+    <link rel="stylesheet" href="recommendations/recommendations.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -35,7 +36,7 @@
           
           <!-- User Role Badge -->
           <div id="userRoleBadge" style="
-            margin-top: 10px;
+            margin-top: 20px;
             padding: 6px 12px;
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: white;
@@ -50,6 +51,7 @@
             👤 User
           </div>
         </div>
+        
         
         <!-- Navigation -->
         <nav class="nav-menu">
@@ -73,7 +75,14 @@
             <span>Events</span>
             <i data-lucide="chevron-right" class="chevron"></i>
           </a>
+          <!-- NEW RECOMMENDATIONS NAV ITEM -->
+          <a href="#" class="nav-item" id="recommendationsLink">
+            <i data-lucide="brain"></i>
+            <span>AI Recommendations</span>
+            <i data-lucide="chevron-right" class="chevron"></i>
+          </a>
         </nav>
+        
         <!-- Logout Button -->
         <button class="logout-btn" onclick="handleLogout()">
           <i data-lucide="log-out"></i>
@@ -227,6 +236,39 @@
           </div>
           <div class="events-grid" id="eventsGrid">
             <!-- Event cards will be injected by events.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW RECOMMENDATIONS SECTION -->
+      <div class="main-content" id="recommendationsSection" style="display: none">
+        <div class="content-container">
+          <div class="recommendations-header">
+            <h1 class="main-title">🤖 AI Game Recommendations</h1>
+            <p class="recommendations-subtitle">Personalized game suggestions powered by machine learning</p>
+            
+            <!-- Recommendation Settings -->
+            <div class="recommendation-controls">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="recommendationCount">Number of recommendations:</label>
+                <select id="recommendationCount">
+                  <option value="5">5 Games</option>
+                  <option value="10">10 Games</option>
+                  <option value="15">15 Games</option>
+                  <option value="20">20 Games</option>
+                </select>
+              </div>
+              
+              <button id="refreshRecommendations" class="refresh-recommendations-btn">
+                <i class="fas fa-sync-alt"></i>
+                Refresh Recommendations
+              </button>
+            </div>
+          </div>
+          
+          <!-- Recommendations Grid -->
+          <div class="recommendations-grid" id="recommendationsGrid">
+            <!-- AI recommendations will be injected here -->
           </div>
         </div>
       </div>
@@ -417,6 +459,7 @@
     <script src="tournement/tournament.js"></script>
     <script src="games/main.js"></script>
     <script src="events/events.js"></script>
+    <script src="recommendations/recommendations.js"></script>
     <script>
       // Global user object - will be populated from session
       let currentUser = null;
@@ -982,9 +1025,9 @@
         console.log("✅ Games should now be visible with improved UI!");
       }
 
-      // Navigation functionality - FIXED
+      // Navigation functionality - UPDATED TO INCLUDE RECOMMENDATIONS
       const navItems = document.querySelectorAll('.nav-item');
-      const sections = ['homeSection', 'gamesSection', 'tournamentSection', 'eventsSection'];
+      const sections = ['homeSection', 'gamesSection', 'tournamentSection', 'eventsSection', 'recommendationsSection'];
       
       navItems.forEach(item => {
         item.addEventListener('click', function(e) {
@@ -1036,6 +1079,16 @@
               setTimeout(() => {
                 console.log('🎉 Attempting to initialize events...');
                 loadEventsDirectly();
+              }, 300);
+              break;
+            case 'recommendationsLink':
+              sectionToShow = 'recommendationsSection';
+              // Force recommendations initialization
+              setTimeout(() => {
+                console.log('🤖 Attempting to initialize AI recommendations...');
+                if (window.recommendationsManager) {
+                  window.recommendationsManager.loadRecommendations();
+                }
               }, 300);
               break;
           }
@@ -1756,7 +1809,7 @@
                       text-transform: uppercase;
                       letter-spacing: 0.5px;
                     ">📍 Location</div>
-                    <div style="
+                                       <div style="
                       color: #f8fafc; 
                       font-weight: 700; 
                       font-size: 0.875rem;

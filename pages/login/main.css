@@ -1,0 +1,548 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background: linear-gradient(135deg, 
+        #0a0e1a 0%, 
+        #1a1f3a 15%, 
+        #2d1b69 30%, 
+        #1e3a8a 45%, 
+        #7c3aed 60%,
+        #ec4899 75%,
+        #f59e0b 90%,
+        #0a0e1a 100%
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Cyberpunk grid background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridFloat 20s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes gridFloat {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+/* Floating particles */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(0, 255, 255, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(255, 0, 255, 0.2) 0%, transparent 50%);
+    animation: particleFloat 25s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes particleFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(50px, -100px) rotate(90deg); }
+    50% { transform: translate(-30px, -50px) rotate(180deg); }
+    75% { transform: translate(-80px, 30px) rotate(270deg); }
+}
+
+.container {
+    width: 100%;
+    max-width: 480px;
+    padding: 30px;
+    position: relative;
+    z-index: 10;
+}
+
+.card {
+    background: linear-gradient(145deg, 
+        rgba(15, 25, 45, 0.95) 0%, 
+        rgba(25, 35, 65, 0.95) 25%,
+        rgba(35, 45, 85, 0.95) 50%,
+        rgba(25, 35, 65, 0.95) 75%,
+        rgba(15, 25, 45, 0.95) 100%
+    );
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 3px solid;
+    border-image: linear-gradient(45deg, 
+        #00ffff 0%,
+        #ff00ff 15%,
+        #ffff00 30%,
+        #00ff00 45%,
+        #ff0080 60%,
+        #8000ff 75%,
+        #ff8000 90%,
+        #00ffff 100%
+    ) 1;
+    border-radius: 30px;
+    padding: 60px 50px;
+    box-shadow: 
+        0 50px 100px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+/* Simplified animated border */
+.card::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, 
+        #00ffff,
+        #ff00ff,
+        #ffff00,
+        #00ff00,
+        #ff0080,
+        #8000ff,
+        #ff8000,
+        #00ffff
+    );
+    border-radius: 33px;
+    z-index: -1;
+    animation: borderRotate 3s linear infinite;
+}
+
+@keyframes borderRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        0 60px 120px rgba(0, 0, 0, 0.9),
+        0 0 80px rgba(0, 255, 255, 0.3);
+}
+
+.home-icon {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    color: #00ffff;
+    font-size: 1.6rem;
+    text-decoration: none;
+    padding: 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        rgba(0, 255, 255, 0.3) 0%, 
+        rgba(0, 255, 255, 0.1) 100%
+    );
+    border: 2px solid rgba(0, 255, 255, 0.5);
+    transition: all 0.5s ease;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 3;
+}
+
+.home-icon:hover {
+    background: radial-gradient(circle, 
+        rgba(0, 255, 255, 0.5) 0%, 
+        rgba(0, 255, 255, 0.2) 100%
+    );
+    transform: translateY(-5px) scale(1.2);
+    box-shadow: 0 20px 50px rgba(0, 255, 255, 0.5);
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+h2 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 3rem;
+    margin-bottom: 40px;
+    margin-top: 30px;
+    text-shadow: 
+        0 0 30px rgba(0, 255, 255, 0.8),
+        0 0 60px rgba(255, 0, 255, 0.6);
+    background: linear-gradient(135deg, 
+        #00ffff 0%, 
+        #ff00ff 25%, 
+        #ffff00 50%, 
+        #00ff00 75%, 
+        #00ffff 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: textShimmer 3s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes textShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.card img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 50px;
+    border-radius: 30px;
+    box-shadow: 
+        0 30px 70px rgba(0, 0, 0, 0.7),
+        0 0 0 4px rgba(0, 255, 255, 0.3);
+    transition: all 0.6s ease;
+    filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
+    position: relative;
+    z-index: 2;
+}
+
+.card img:hover {
+    transform: scale(1.2) rotate(15deg);
+    box-shadow: 
+        0 40px 90px rgba(0, 0, 0, 0.8),
+        0 0 60px rgba(0, 255, 255, 0.7);
+}
+
+.card input {
+    width: 100%;
+    padding: 22px 32px;
+    margin-bottom: 30px;
+    background: linear-gradient(145deg, 
+        rgba(0, 255, 255, 0.1), 
+        rgba(255, 0, 255, 0.1)
+    );
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 20px;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: 'Rajdhani', sans-serif;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    position: relative;
+    z-index: 2;
+}
+
+.card input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+.card input:focus {
+    outline: none;
+    border-color: #00ffff;
+    background: linear-gradient(145deg, 
+        rgba(0, 255, 255, 0.2), 
+        rgba(255, 0, 255, 0.2)
+    );
+    box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.3);
+    transform: translateY(-5px);
+    color: #ffffff;
+}
+
+.card button {
+    width: 100%;
+    padding: 22px 35px;
+    background: linear-gradient(135deg, 
+        #00ffff 0%, 
+        #0080ff 25%, 
+        #8000ff 50%, 
+        #ff00ff 75%,
+        #ff0080 100%
+    );
+    background-size: 200% 200%;
+    color: #000000;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    font-family: 'Orbitron', monospace;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    box-shadow: 0 20px 50px rgba(0, 255, 255, 0.5);
+    z-index: 2;
+    animation: buttonGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes buttonGlow {
+    0% { 
+        background-position: 0% 50%;
+        box-shadow: 0 20px 50px rgba(0, 255, 255, 0.5);
+    }
+    100% { 
+        background-position: 100% 50%;
+        box-shadow: 0 20px 50px rgba(255, 0, 255, 0.5);
+    }
+}
+
+.card button:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 30px 70px rgba(0, 255, 255, 0.7);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
+
+.card button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    background: linear-gradient(135deg, #666, #444);
+    animation: none;
+}
+
+#demoLoginBtn {
+    background: linear-gradient(135deg, 
+        #ffff00 0%, 
+        #ff8000 25%, 
+        #ff4000 50%, 
+        #ff0040 75%,
+        #ff0080 100%
+    ) !important;
+    background-size: 200% 200% !important;
+    margin-top: 25px !important;
+    box-shadow: 0 20px 50px rgba(255, 255, 0, 0.5) !important;
+    font-family: 'Rajdhani', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: 2px !important;
+    animation: demoGlow 2s ease-in-out infinite alternate !important;
+}
+
+@keyframes demoGlow {
+    0% { 
+        background-position: 0% 50%;
+        box-shadow: 0 20px 50px rgba(255, 255, 0, 0.5);
+    }
+    100% { 
+        background-position: 100% 50%;
+        box-shadow: 0 20px 50px rgba(255, 128, 0, 0.5);
+    }
+}
+
+.card h5 {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 40px 0 30px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: 'Rajdhani', sans-serif;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.create-account-btn {
+    background: linear-gradient(135deg, 
+        #00ff00 0%, 
+        #00ff80 25%, 
+        #00ffff 50%, 
+        #0080ff 75%,
+        #0000ff 100%
+    ) !important;
+    background-size: 200% 200% !important;
+    color: #000000 !important;
+    text-decoration: none !important;
+    padding: 20px 35px !important;
+    border-radius: 20px !important;
+    display: inline-block !important;
+    font-weight: 900 !important;
+    font-family: 'Orbitron', monospace !important;
+    text-transform: uppercase !important;
+    letter-spacing: 3px !important;
+    margin-top: 30px !important;
+    transition: all 0.4s ease !important;
+    box-shadow: 0 20px 50px rgba(0, 255, 0, 0.5) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    font-size: 1.1rem !important;
+    z-index: 2 !important;
+    animation: createGlow 2s ease-in-out infinite alternate !important;
+}
+
+@keyframes createGlow {
+    0% { 
+        background-position: 0% 50%;
+        box-shadow: 0 20px 50px rgba(0, 255, 0, 0.5);
+    }
+    100% { 
+        background-position: 100% 50%;
+        box-shadow: 0 20px 50px rgba(0, 255, 255, 0.5);
+    }
+}
+
+.create-account-btn:hover {
+    transform: translateY(-8px) scale(1.05) !important;
+    box-shadow: 0 30px 70px rgba(0, 255, 0, 0.7) !important;
+    color: #000000 !important;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Enhanced checkbox styling */
+input[type="checkbox"] {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 15px !important;
+    accent-color: #00ffff;
+    cursor: pointer;
+    transform: scale(1.5);
+}
+
+label {
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    user-select: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Enhanced Success/Error messages */
+#registrationSuccess,
+#errorMessage {
+    animation: messageSlide 0.8s ease;
+    border-radius: 18px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+    font-size: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes messageSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Enhanced password toggle button */
+#togglePassword {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none !important;
+    border: none !important;
+    width: auto !important;
+    padding: 12px !important;
+    margin: 0 !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease !important;
+    z-index: 3 !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    cursor: pointer;
+}
+
+#togglePassword:hover {
+    color: #00ffff !important;
+    background: rgba(0, 255, 255, 0.2) !important;
+    transform: translateY(-50%) scale(1.3) !important;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4) !important;
+}
+
+/* Enhanced forgot password link */
+.card a:not(.create-account-btn):not(.home-icon) {
+    color: #ff8000 !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    font-family: 'Rajdhani', sans-serif !important;
+    transition: all 0.3s ease !important;
+    padding: 10px 20px !important;
+    border-radius: 15px !important;
+    display: inline-block !important;
+    position: relative !important;
+    z-index: 2 !important;
+    font-size: 1rem !important;
+}
+
+.card a:not(.create-account-btn):not(.home-icon):hover {
+    color: #ffff00 !important;
+    background: rgba(255, 128, 0, 0.2) !important;
+    transform: translateY(-3px) !important;
+    text-shadow: 0 0 20px rgba(255, 255, 0, 0.8) !important;
+    box-shadow: 0 10px 30px rgba(255, 128, 0, 0.3) !important;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+        max-width: 95%;
+    }
+    
+    .card {
+        padding: 50px 35px;
+        border-radius: 25px;
+    }
+    
+    h2 {
+        font-size: 2.5rem;
+        margin-bottom: 35px;
+    }
+    
+    .card img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 40px;
+    }
+    
+    .card input {
+        padding: 20px 28px;
+        font-size: 1.1rem;
+    }
+    
+    .card button {
+        padding: 20px 30px;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+    }
+}
+
+/* Spinning animation for loading */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

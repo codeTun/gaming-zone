@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Gaming Zone</title>
+    <!-- Fixed CSS path -->
+    <link rel="stylesheet" href="main.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        backdrop-filter: blur(5px);
+    ">
+        <div style="
+            color: white;
+            text-align: center;
+            font-size: 1.2rem;
+        ">
+            <div style="
+                width: 50px;
+                height: 50px;
+                border: 4px solid rgba(255, 255, 255, 0.3);
+                border-top: 4px solid #fff;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 20px;
+            "></div>
+            Signing you in...
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <a href="/gaming-zone/" class="home-icon">
+                <i class="fas fa-home"></i>
+            </a>
+            
+            <!-- Registration success message -->
+            <div id="registrationSuccess" style="
+                display: none;
+                background: rgba(76, 175, 80, 0.1);
+                color: #4CAF50;
+                border: 1px solid #4CAF50;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                text-align: center;
+            ">
+                🎉 Account created successfully! Please sign in with your credentials.
+            </div>
+           
+            <h2 style="color: azure;">Sign in from here</h2>
+            <img src='/gaming-zone/assets/images/logo.png' alt="Gaming Logo" loading='lazy' />
+
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <input type="email" id="email" placeholder="Enter your email" required />
+                <div style="position: relative;">
+                    <input type="password" id="password" placeholder="Enter your password" required />
+                    <button type="button" id="togglePassword" style="
+                        position: absolute;
+                        right: 15px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: none;
+                        border: none;
+                        color: #ccc;
+                        cursor: pointer;
+                        font-size: 0.9rem;
+                    " onclick="togglePasswordVisibility()">
+                        <i class="fas fa-eye" id="passwordIcon"></i>
+                    </button>
+                </div>
+
+                <!-- Remember me checkbox -->
+                <div style="display: flex; align-items: center; margin: 15px 0; color: azure;">
+                    <input type="checkbox" id="rememberMe" style="margin-right: 8px;">
+                    <label for="rememberMe" style="font-size: 0.9rem; cursor: pointer;">Remember me for 30 days</label>
+                </div>
+
+                <!-- Error message container -->
+                <div id="errorMessage" style="
+                    display: none;
+                    background: rgba(244, 67, 54, 0.1);
+                    color: #f44336;
+                    border: 1px solid #f44336;
+                    padding: 12px;
+                    border-radius: 8px;
+                    margin: 15px 0;
+                    text-align: center;
+                    font-size: 0.9rem;
+                "></div>
+
+                <button type="submit" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+
+            <!-- Demo Login Button -->
+            <button id="demoLoginBtn" onclick="demoLogin()" style="
+                background: rgba(255, 193, 7, 0.2);
+                border: 1px solid #ffc107;
+                color: #ffc107;
+                margin-top: 15px;
+                width: 100%;
+                padding: 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 0.9rem;
+            ">
+                <i class="fas fa-user"></i> Demo Login (Elazheri Iheb)
+            </button>
+
+            <h5 style="color: azure; margin-top: 30px;">If you don't have an account</h5> 
+            <a href="/gaming-zone/pages/createaccount/createaccount.html" class="create-account-btn">
+                <i class="fas fa-user-plus"></i> Create Account Here!
+            </a>
+
+            <!-- Forgot password link -->
+            <div style="margin-top: 20px;">
+                <a href="#" onclick="forgotPassword()" style="color: #ff9800; text-decoration: none; font-size: 0.9rem;">
+                    <i class="fas fa-key"></i> Forgot your password?
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 Login page loaded');
+
+        // Check for registration success parameter
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('registered') === 'true') {
+                document.getElementById('registrationSuccess').style.display = 'block';
+            }
+
+            // Check if user is already logged in
+            checkExistingAuth();
+        });
+
+        // Check if user is already authenticated
+        async function checkExistingAuth() {
+            try {
+                console.log('🔐 Checking existing authentication...');
+                const response = await fetch('http://localhost/gaming-zone/api/auth.php', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    console.log('ℹ️ No existing session found');
+                    return;
+                }
+                
+                const result = await response.json();
+                console.log('🔐 Auth check result:', result);
+                
+                if (result.authenticated && result.user) {
+                    console.log('✅ User already authenticated:', result.user);
+                    
+                    // Show loading message
+                    showLoading(true);
+                    showSuccessMessage('✅ Already logged in! Redirecting...');
+                    
+                    // Role-based redirect
+                    setTimeout(() => {
+                        if (result.user.role === 'ADMIN') {
+                            console.log('👑 Redirecting admin to dashboard...');
+                            window.location.href = '/gaming-zone/admin/dashboard.html';
+                        } else {
+                            console.log('👤 Redirecting user to interface...');
+                            window.location.href = '/gaming-zone/user-interface/main.html';
+                        }
+                    }, 1500);
+                }
+            } catch (error) {
+                console.log('ℹ️ No existing authentication found:', error);
+            }
+        }
+
+        // Handle login form submission - ENHANCED WITH BETTER ERROR HANDLING
+        async function handleLogin(event) {
+            event.preventDefault();
+            console.log('📝 Handling login form submission...');
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            console.log('📋 Login attempt:', { email, rememberMe, passwordLength: password.length });
+
+            if (!email || !password) {
+                showError('⚠️ Please enter both email and password');
+                return;
+            }
+
+            // Show loading state
+            showLoading(true);
+            const loginBtn = document.getElementById('loginBtn');
+            const originalBtnText = loginBtn.innerHTML;
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+
+            try {
+                const loginData = {
+                    action: 'login',
+                    email: email,
+                    password: password,
+                    rememberMe: rememberMe
+                };
+
+                console.log('📤 Sending login request:', loginData);
+
+                const response = await fetch('http://localhost/gaming-zone/api/auth.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(loginData)
+                });
+
+                console.log('📡 Login response status:', response.status);
+
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const textResponse = await response.text();
+                    console.error('❌ Non-JSON response received:', textResponse);
+                    throw new Error('🔧 Server configuration error. Please contact support.');
+                }
+
+                const result = await response.json();
+                console.log('📥 Login response:', result);
+
+                if (result.success && result.user) {
+                    console.log('✅ Login successful! User:', result.user);
+                    
+                    // Store token in cookie if remember me is checked
+                    if (rememberMe && result.token) {
+                        setCookie('auth_token', result.token, 30); // 30 days
+                        setCookie('user_id', result.user.id, 30);
+                        console.log('🍪 Remember me cookies set');
+                    }
+
+                    // Store user info in localStorage for easy access
+                    localStorage.setItem('gaming_zone_user', JSON.stringify(result.user));
+                    console.log('💾 User data stored in localStorage');
+                    
+                    // Show success message briefly
+                    hideError();
+                    showSuccessMessage('✅ Login successful! Redirecting...');
+                    
+                    // Enhanced role-based redirection
+                    setTimeout(() => {
+                        console.log('🔄 Redirecting based on user role:', result.user.role);
+                        
+                        try {
+                            if (result.user.role === 'ADMIN') {
+                                console.log('👑 Admin user detected, redirecting to admin dashboard...');
+                                window.location.replace('/gaming-zone/admin/dashboard.html');
+                            } else {
+                                console.log('👤 Regular user detected, redirecting to user interface...');
+                                window.location.replace('/gaming-zone/user-interface/main.html');
+                            }
+                        } catch (redirectError) {
+                            console.error('❌ Redirect failed:', redirectError);
+                            // Fallback redirect
+                            window.location.href = '/gaming-zone/user-interface/main.html';
+                        }
+                    }, 1500);
+                } else {
+                    console.error('❌ Login failed:', result);
+                    
+                    // Enhanced error handling with specific messages
+                    let errorMessage = '❌ Login failed';
+                    
+                    if (result.error) {
+                        if (result.error.includes('User not found') || result.error.includes('not exist')) {
+                            errorMessage = '👤 Account not found!\n\nThis email is not registered. Please create an account first or check your email address.';
+                            showAccountNotFoundModal(email);
+                            return;
+                        } else if (result.error.includes('password') || result.error.includes('Invalid credentials')) {
+                            errorMessage = '🔒 Incorrect password!\n\nPlease check your password and try again.';
+                        } else if (result.error.includes('email')) {
+                            errorMessage = '📧 Invalid email format!\n\nPlease enter a valid email address.';
+                        } else {
+                            errorMessage = '❌ ' + result.error;
+                        }
+                    }
+                    
+                    showError(errorMessage);
+                }
+            } catch (error) {
+                console.error('❌ Login failed:', error);
+                
+                // Network or server errors
+                if (error.message.includes('fetch')) {
+                    showError('🌐 Network error!\n\nPlease check your internet connection and try again.');
+                } else if (error.message.includes('Server')) {
+                    showError('🔧 Server error!\n\nPlease try again later or contact support.');
+                } else {
+                    showError('❌ ' + error.message);
+                }
+            } finally {
+                // Reset button state
+                showLoading(false);
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = originalBtnText;
+            }
+        }
+
+        // Show account not found modal
+        function showAccountNotFoundModal(email) {
+            const modal = `
+                <div id="accountNotFoundModal" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.9);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 10000;
+                    backdrop-filter: blur(10px);
+                ">
+                    <div style="
+                        background: linear-gradient(145deg, rgba(15, 25, 45, 0.95), rgba(25, 35, 65, 0.95));
+                        border: 2px solid #00ffff;
+                        border-radius: 20px;
+                        padding: 40px;
+                        max-width: 500px;
+                        width: 90%;
+                        text-align: center;
+                        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 255, 255, 0.3);
+                        color: white;
+                        font-family: 'Rajdhani', sans-serif;
+                    ">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">🚫</div>
+                        <h2 style="
+                            color: #ff6b6b;
+                            margin-bottom: 20px;
+                            font-family: 'Orbitron', monospace;
+                            font-size: 1.8rem;
+                        ">Account Not Found!</h2>
+                        <p style="
+                            font-size: 1.1rem;
+                            margin-bottom: 30px;
+                            line-height: 1.6;
+                            color: rgba(255, 255, 255, 0.9);
+                        ">
+                            The email <strong style="color: #00ffff;">${email}</strong> is not registered in our system.
+                        </p>
+                        <div style="
+                            background: rgba(0, 255, 255, 0.1);
+                            border: 1px solid rgba(0, 255, 255, 0.3);
+                            border-radius: 10px;
+                            padding: 20px;
+                            margin-bottom: 30px;
+                        ">
+                            <p style="margin: 0; font-size: 1rem;">
+                                💡 <strong>What would you like to do?</strong>
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                            <button onclick="redirectToRegister()" style="
+                                background: linear-gradient(135deg, #00ff00, #00ffff);
+                                color: #000;
+                                border: none;
+                                padding: 15px 25px;
+                                border-radius: 10px;
+                                font-weight: 700;
+                                cursor: pointer;
+                                font-family: 'Orbitron', monospace;
+                                transition: all 0.3s ease;
+                            ">
+                                ➕ Create Account
+                            </button>
+                            <button onclick="tryDifferentEmail()" style="
+                                background: linear-gradient(135deg, #ff8000, #ffff00);
+                                color: #000;
+                                border: none;
+                                padding: 15px 25px;
+                                border-radius: 10px;
+                                font-weight: 700;
+                                cursor: pointer;
+                                font-family: 'Orbitron', monospace;
+                                transition: all 0.3s ease;
+                            ">
+                                📧 Try Different Email
+                            </button>
+                            <button onclick="closeAccountNotFoundModal()" style="
+                                background: rgba(255, 255, 255, 0.1);
+                                color: white;
+                                border: 2px solid rgba(255, 255, 255, 0.3);
+                                padding: 15px 25px;
+                                border-radius: 10px;
+                                font-weight: 700;
+                                cursor: pointer;
+                                font-family: 'Orbitron', monospace;
+                                transition: all 0.3s ease;
+                            ">
+                                ❌ Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modal);
+        }
+
+        // Modal action functions
+        window.redirectToRegister = function() {
+            window.location.href = '/gaming-zone/pages/createaccount/createaccount.html';
+        };
+
+        window.tryDifferentEmail = function() {
+            closeAccountNotFoundModal();
+            document.getElementById('email').focus();
+            document.getElementById('email').select();
+        };
+
+        window.closeAccountNotFoundModal = function() {
+            const modal = document.getElementById('accountNotFoundModal');
+            if (modal) {
+                modal.remove();
+            }
+        };
+
+        // Toggle password visibility
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('passwordIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.className = 'fas fa-eye';
+            }
+        }
+
+        // Show loading overlay
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
+
+        // Show error message
+        function showError(message) {
+            console.log('❌ Showing error:', message);
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.background = 'rgba(244, 67, 54, 0.1)';
+            errorDiv.style.color = '#f44336';
+            errorDiv.style.border = '1px solid #f44336';
+            errorDiv.style.display = 'block';
+            
+            // Auto-hide after 8 seconds
+            setTimeout(() => {
+                hideError();
+            }, 8000);
+        }
+
+        // Hide error message
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Show success message
+        function showSuccessMessage(message) {
+            console.log('✅ Showing success:', message);
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.background = 'rgba(76, 175, 80, 0.1)';
+            errorDiv.style.color = '#4CAF50';
+            errorDiv.style.border = '1px solid #4CAF50';
+            errorDiv.style.display = 'block';
+        }
+
+        // Enhanced cookie utility functions
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax;Secure=${location.protocol === 'https:'}`;
+            console.log(`🍪 Cookie set: ${name}`);
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Forgot password function
+        function forgotPassword() {
+            alert('🔑 Forgot Password feature coming soon!\n\nFor now, please contact support or use the demo login.');
+        }
+
+        // Backward compatibility function (if called from old scripts)
+        function validateLogin() {
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        }
+
+        // Demo login function - ENHANCED
+        async function demoLogin() {
+            console.log("🎮 Demo login initiated...");
+
+            // Show loading state immediately
+            const demoBtn = document.getElementById("demoLoginBtn");
+            const originalText = demoBtn.innerHTML;
+            demoBtn.disabled = true;
+            demoBtn.innerHTML =
+              '<i class="fas fa-spinner fa-spin"></i> Setting up demo...';
+
+            try {
+              // Fill form with demo credentials
+              document.getElementById("email").value = "iheb@example.com";
+              document.getElementById("password").value = "password123";
+              document.getElementById("rememberMe").checked = true;
+
+              console.log("📝 Demo credentials filled");
+
+              // Small delay to show the form fill
+              setTimeout(() => {
+                console.log("🚀 Triggering demo login...");
+                // Trigger login
+                const submitEvent = new Event("submit", {
+                  bubbles: true,
+                  cancelable: true,
+                });
+                document.getElementById("loginForm").dispatchEvent(submitEvent);
+              }, 800);
+            } catch (error) {
+              console.error("❌ Demo login setup failed:", error);
+              showError("❌ Demo login failed: " + error.message);
+
+              // Reset button
+              demoBtn.disabled = false;
+              demoBtn.innerHTML = originalText;
+            }
+          }
+
+        console.log('✅ Login page scripts loaded successfully');
+    </script>
+</body>
+
+</html>
