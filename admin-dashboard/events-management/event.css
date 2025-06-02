@@ -244,6 +244,7 @@
 }
 
 /* Modal */
+/* Modal Styles - Dark Theme */
 .event_modal {
   display: none;
   position: fixed;
@@ -251,8 +252,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(8px);
 }
 
 .event_modal.active {
@@ -262,81 +266,198 @@
 }
 
 .event_modal_content {
-  background-color: #1f2937;
-  border-radius: 0.5rem;
+  background: #1e293b;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  max-width: 600px;
   width: 90%;
-  max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
+  position: relative;
+  margin: auto;
+  animation: modalSlideIn 0.3s ease;
+  border: 1px solid #334155;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .event_modal_header {
-  padding: 1.5rem;
-  border-bottom: 1px solid #374151;
+  padding: 24px 24px 0 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #334155;
+  margin-bottom: 24px;
 }
 
 .event_modal_header h2 {
-  font-size: 1.25rem;
+  margin: 0;
+  color: #f8fafc;
+  font-size: 1.5rem;
   font-weight: 600;
 }
 
 .event_close_btn {
   background: none;
   border: none;
-  color: #9ca3af;
+  font-size: 24px;
   cursor: pointer;
-  padding: 0.25rem;
+  color: #94a3b8;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
 }
 
 .event_close_btn:hover {
-  color: white;
+  background: #334155;
+  color: #ef4444;
 }
 
-.event_close_icon {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-/* Form */
 .event_form {
-  padding: 1.5rem;
+  padding: 0 24px 24px 24px;
 }
 
 .event_form_group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
 }
 
 .event_form_group label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #e2e8f0;
   font-size: 0.875rem;
-  color: #9ca3af;
 }
 
 .event_form_group input,
-.event_form_group textarea {
+.event_form_group textarea,
+.event_form_group select {
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  background-color: #374151;
-  border: 1px solid #4b5563;
-  border-radius: 0.375rem;
-  color: white;
+  padding: 12px 16px;
+  border: 2px solid #475569;
+  border-radius: 8px;
   font-size: 0.875rem;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #1e293b;
 }
 
 .event_form_group input:focus,
-.event_form_group textarea:focus {
+.event_form_group textarea:focus,
+.event_form_group select:focus {
   outline: none;
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.event_form_group input::placeholder,
+.event_form_group textarea::placeholder {
+  color: #64748b;
+}
+
+.event_form_group textarea {
+  resize: vertical;
+  min-height: 80px;
 }
 
 .event_form_actions {
   display: flex;
-  gap: 1rem;
+  gap: 12px;
   justify-content: flex-end;
-  margin-top: 2rem;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #334155;
+}
+
+.event_primary_btn,
+.event_secondary_btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+}
+
+.event_primary_btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+}
+
+.event_primary_btn:hover {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+}
+
+.event_secondary_btn {
+  background: #475569;
+  color: #e2e8f0;
+  border: 2px solid #64748b;
+}
+
+.event_secondary_btn:hover {
+  background: #64748b;
+  border-color: #94a3b8;
+  color: #f1f5f9;
+}
+
+/* Custom scrollbar for modal */
+.event_modal_content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.event_modal_content::-webkit-scrollbar-track {
+  background: #334155;
+}
+
+.event_modal_content::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-radius: 4px;
+}
+
+.event_modal_content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+  .event_modal_content {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .event_modal_header,
+  .event_form {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  .event_form_actions {
+    flex-direction: column;
+  }
+  
+  .event_primary_btn,
+  .event_secondary_btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
