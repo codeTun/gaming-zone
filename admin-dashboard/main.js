@@ -511,6 +511,13 @@ document.addEventListener("DOMContentLoaded", () => {
           } else {
             console.error('TournamentManager not found on window object');
           }
+        } else if (sectionName === 'users') {
+          console.log('Users section activated, initializing UserManager');
+          if (window.userManager) {
+            await window.userManager.init();
+          } else {
+            console.error('UserManager not found on window object');
+          }
         }
       } catch (error) {
         console.error(`Failed to initialize ${sectionName} section:`, error);
@@ -530,6 +537,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (sectionId === 'games' && window.gameManager) {
       console.log('Initializing GameManager for active games section');
       window.gameManager.init();
+    } else if (sectionId === 'users' && window.userManager) {
+      console.log('Initializing UserManager for active users section');
+      window.userManager.init();
     }
   }
   
@@ -550,4 +560,71 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   
   window.dashboardManager = new DashboardManager();
+});
+
+// Navigation handling
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Main.js DOM loaded - Setting up navigation');
+    
+    const navItems = document.querySelectorAll('.nav-item');
+    const contentSections = document.querySelectorAll('.content-section');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            console.log('🔄 Navigation clicked:', this.getAttribute('data-section'));
+            
+            // Remove active class from all nav items and sections
+            navItems.forEach(nav => nav.classList.remove('active'));
+            contentSections.forEach(section => section.classList.remove('active'));
+            
+            // Add active class to clicked nav item
+            this.classList.add('active');
+            
+            // Show corresponding section
+            const targetSection = this.getAttribute('data-section');
+            const section = document.getElementById(targetSection);
+            if (section) {
+                section.classList.add('active');
+                console.log('✅ Activated section:', targetSection);
+                
+                // Initialize managers when their sections are viewed
+                setTimeout(() => {
+                    console.log('🔄 Initializing manager for section:', targetSection);
+                    
+                    if (targetSection === 'users') {
+                        console.log('👥 Users section - checking userManager...');
+                        console.log('UserManager class available:', typeof window.UserManager !== 'undefined');
+                        console.log('userManager instance available:', typeof window.userManager !== 'undefined');
+                        
+                        // Ensure UserManager class is available
+                        if (typeof window.UserManager === 'undefined') {
+                            console.error('❌ UserManager class not loaded');
+                            return;
+                        }
+                        
+                        // Create instance if it doesn't exist
+                        if (!window.userManager) {
+                          console.log('🔧 Creating new UserManager instance...');
+                          window.userManager = new window.UserManager();
+                        }
+                        
+                        console.log('✅ UserManager found, initializing...');
+                        window.userManager.init();
+                        
+                    } else if (targetSection === 'games' && window.gameManager) {
+                        console.log('🔄 Initializing Game Management...');
+                        window.gameManager.init();
+                    } else if (targetSection === 'events' && window.eventManager) {
+                        console.log('🔄 Initializing Event Management...');
+                        window.eventManager.init();
+                    } else if (targetSection === 'tournaments' && window.tournamentManager) {
+                        console.log('🔄 Initializing Tournament Management...');
+                        window.tournamentManager.init();
+                    }
+                }, 200);
+            }
+        });
+    });
 });

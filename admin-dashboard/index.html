@@ -115,11 +115,15 @@
                 <div class="stats-container">
                   <div class="stat-card">
                     <h3>👥 Total Users</h3>
-                    <p id="total-users">3</p>
+                    <p id="users-total-count">0</p>
                   </div>
                   <div class="stat-card">
-                    <h3>🚫 Banned Users</h3>
-                    <p id="banned-users">0</p>
+                    <h3>👨‍💼 Admin Users</h3>
+                    <p id="admin-users">0</p>
+                  </div>
+                  <div class="stat-card">
+                    <h3>👤 Regular Users</h3>
+                    <p id="regular-users">0</p>
                   </div>
                 </div>
                 <div class="users-list-container">
@@ -131,9 +135,8 @@
                           <th>ID</th>
                           <th>Username</th>
                           <th>Email</th>
-                          <th>Status</th>
+                          <th>Role</th>
                           <th>Join Date</th>
-                          <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody id="users-table-body">
@@ -421,13 +424,23 @@
 
     <!-- Scripts -->
     <script src="api/apiService.js"></script>
-    <script src="main.js"></script>
     <script src="user-management/user.js"></script>
     <script src="game-management/game.js"></script>
     <script src="events-management/event.js"></script>
     <script src="tournaments-management/tournament.js"></script>
+    <script src="main.js"></script>
     <script>
-      lucide.createIcons();
+      // Ensure all managers are loaded after DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 All scripts loaded, checking managers...');
+        console.log('UserManager available:', typeof UserManager !== 'undefined');
+        console.log('GameManager available:', typeof GameManager !== 'undefined');
+        console.log('EventManager available:', typeof EventManager !== 'undefined');
+        console.log('TournamentManager available:', typeof TournamentManager !== 'undefined');
+        
+        // Initialize icons
+        lucide.createIcons();
+      });
     </script>
   </body>
 </html>
