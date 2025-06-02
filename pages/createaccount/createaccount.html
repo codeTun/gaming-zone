@@ -53,7 +53,7 @@
       <div class="container">
         <div class="card">
           <div class="back-arrow">
-            <a href="/gaming-zone/pages/login/login.html">
+            <a href="/gaming-zone/pages/loginuser/index.html">
               <i class="fas fa-arrow-left"></i>
             </a>
           </div>
@@ -206,7 +206,7 @@
           >
             Already have an account?
             <a
-              href="/gaming-zone/pages/login/login.html"
+              href="/gaming-zone/pages/loginuser/index.html"
               style="color: #4caf50; text-decoration: none"
               >Sign in here</a
             >
@@ -367,7 +367,7 @@
 
             // Redirect to login after 2 seconds
             setTimeout(() => {
-              window.location.href = "/pages/login/login.html?registered=true";
+              window.location.href = "gaming-zone/user_interface/main.html";
             }, 2000);
           } else {
             throw new Error(result.error || "Registration failed");

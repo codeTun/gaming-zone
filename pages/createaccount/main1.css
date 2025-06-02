@@ -8,17 +8,13 @@
 
 body {
     font-family: 'Rajdhani', sans-serif;
-    background: 
-        linear-gradient(135deg, 
-            rgba(13, 25, 43, 0.9) 0%, 
-            rgba(27, 38, 79, 0.9) 25%, 
-            rgba(15, 52, 96, 0.9) 50%, 
-            rgba(83, 52, 131, 0.9) 75%, 
-            rgba(108, 43, 128, 0.9) 100%
-        ),
-        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-    background-attachment: fixed;
-    background-size: cover, 50px 50px;
+    background: linear-gradient(135deg, 
+        #0a0e1a 0%, 
+        #1a1f3a 25%, 
+        #2d1b69 50%, 
+        #1e3a8a 75%, 
+        #0a0e1a 100%
+    );
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -28,7 +24,7 @@ body {
     padding: 20px 0;
 }
 
-/* Animated particles */
+/* Cyberpunk Grid Background */
 body::before {
     content: '';
     position: fixed;
@@ -37,153 +33,112 @@ body::before {
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(circle at 25% 25%, rgba(64, 181, 246, 0.1) 0%, transparent 70%),
-        radial-gradient(circle at 75% 75%, rgba(76, 175, 80, 0.1) 0%, transparent 70%),
-        radial-gradient(circle at 50% 10%, rgba(255, 152, 0, 0.1) 0%, transparent 70%),
-        radial-gradient(circle at 10% 80%, rgba(233, 30, 99, 0.1) 0%, transparent 70%);
-    animation: float 20s ease-in-out infinite;
+        linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
     z-index: 0;
+    pointer-events: none;
 }
 
-@keyframes float {
+/* Floating Particles */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+    animation: particleFloat 25s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes particleFloat {
     0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    33% { transform: translate(30px, -30px) rotate(120deg); }
-    66% { transform: translate(-20px, 20px) rotate(240deg); }
+    25% { transform: translate(50px, -100px) rotate(90deg); }
+    50% { transform: translate(-30px, -50px) rotate(180deg); }
+    75% { transform: translate(-80px, 30px) rotate(270deg); }
 }
 
 .container {
     width: 100%;
-    max-width: 500px;
+    max-width: 480px;
     padding: 20px;
     position: relative;
     z-index: 10;
 }
 
 .card {
-    background: 
-        linear-gradient(145deg, 
-            rgba(15, 25, 45, 0.95) 0%, 
-            rgba(25, 35, 65, 0.95) 50%, 
-            rgba(15, 25, 45, 0.95) 100%
-        );
+    background: linear-gradient(145deg, 
+        rgba(15, 25, 45, 0.95) 0%, 
+        rgba(25, 35, 65, 0.95) 50%, 
+        rgba(15, 25, 45, 0.95) 100%
+    );
     backdrop-filter: blur(25px);
-    border: 2px solid;
-    border-image: linear-gradient(145deg, 
-        rgba(64, 181, 246, 0.3), 
-        rgba(76, 175, 80, 0.3), 
-        rgba(255, 152, 0, 0.3)
-    ) 1;
+    -webkit-backdrop-filter: blur(25px);
+    border: 3px solid rgba(0, 255, 255, 0.4);
     border-radius: 25px;
     padding: 40px 35px;
-    box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.7),
-        0 0 0 1px rgba(255, 255, 255, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
     text-align: center;
     position: relative;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(
-        from 0deg,
-        transparent,
-        rgba(64, 181, 246, 0.05),
-        transparent,
-        rgba(76, 175, 80, 0.05),
-        transparent,
-        rgba(255, 152, 0, 0.05),
-        transparent
-    );
-    animation: rotate 12s linear infinite;
-    z-index: -1;
-}
-
-@keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    transition: all 0.5s ease;
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.8),
+        0 0 40px rgba(0, 255, 255, 0.2);
 }
 
 .card:hover {
     transform: translateY(-5px) scale(1.01);
     box-shadow: 
-        0 40px 80px rgba(0, 0, 0, 0.8),
-        0 0 50px rgba(64, 181, 246, 0.2);
+        0 40px 80px rgba(0, 0, 0, 0.9),
+        0 0 50px rgba(0, 255, 255, 0.3);
 }
 
 .back-arrow {
     position: absolute;
-    top: 25px;
-    left: 25px;
+    top: 20px;
+    left: 20px;
 }
 
 .back-arrow a {
-    color: #64b5f6;
+    color: #00ffff;
     font-size: 1.3rem;
     text-decoration: none;
     padding: 12px;
     border-radius: 50%;
-    background: 
-        linear-gradient(145deg, 
-            rgba(64, 181, 246, 0.1), 
-            rgba(64, 181, 246, 0.05)
-        );
-    border: 1px solid rgba(64, 181, 246, 0.3);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
+    background: radial-gradient(circle, 
+        rgba(0, 255, 255, 0.3) 0%, 
+        rgba(0, 255, 255, 0.1) 100%
+    );
+    border: 2px solid rgba(0, 255, 255, 0.5);
+    transition: all 0.4s ease;
+    backdrop-filter: blur(15px);
     display: inline-block;
 }
 
 .back-arrow a:hover {
-    background: 
-        linear-gradient(145deg, 
-            rgba(64, 181, 246, 0.2), 
-            rgba(64, 181, 246, 0.1)
-        );
+    background: radial-gradient(circle, 
+        rgba(0, 255, 255, 0.5) 0%, 
+        rgba(0, 255, 255, 0.2) 100%
+    );
     transform: translateY(-3px) scale(1.1);
-    box-shadow: 
-        0 10px 25px rgba(64, 181, 246, 0.3),
-        0 0 20px rgba(64, 181, 246, 0.2);
+    box-shadow: 0 15px 30px rgba(0, 255, 255, 0.5);
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
 }
 
 h2 {
     font-family: 'Orbitron', monospace;
-    font-weight: 700;
-    font-size: 2rem;
+    font-weight: 900;
+    font-size: 2.2rem;
     margin-bottom: 25px;
-    margin-top: 10px;
-    text-shadow: 
-        0 0 10px rgba(64, 181, 246, 0.5),
-        0 0 20px rgba(64, 181, 246, 0.3),
-        0 2px 10px rgba(0, 0, 0, 0.8);
-    background: linear-gradient(135deg, 
-        #64b5f6 0%, 
-        #42a5f5 25%, 
-        #2196f3 50%, 
-        #1976d2 75%, 
-        #0d47a1 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes glow {
-    from {
-        filter: drop-shadow(0 0 5px rgba(64, 181, 246, 0.3));
-    }
-    to {
-        filter: drop-shadow(0 0 15px rgba(64, 181, 246, 0.6));
-    }
+    margin-top: 15px;
+    color: #00ffff;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
 }
 
 .card img {
@@ -192,56 +147,50 @@ h2 {
     margin-bottom: 25px;
     border-radius: 20px;
     box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.5),
-        0 0 0 3px rgba(255, 255, 255, 0.1);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    filter: drop-shadow(0 0 10px rgba(64, 181, 246, 0.3));
+        0 20px 40px rgba(0, 0, 0, 0.7),
+        0 0 0 3px rgba(0, 255, 255, 0.3);
+    transition: all 0.4s ease;
+    filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
 }
 
 .card img:hover {
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.1) rotate(10deg);
     box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.6),
-        0 0 30px rgba(64, 181, 246, 0.4);
+        0 25px 50px rgba(0, 0, 0, 0.8),
+        0 0 40px rgba(0, 255, 255, 0.7);
 }
 
 .card input {
     width: 100%;
     padding: 15px 20px;
     margin-bottom: 18px;
-    background: 
-        linear-gradient(145deg, 
-            rgba(255, 255, 255, 0.03), 
-            rgba(255, 255, 255, 0.08)
-        );
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(145deg, 
+        rgba(0, 255, 255, 0.1), 
+        rgba(255, 0, 255, 0.1)
+    );
+    border: 2px solid rgba(0, 255, 255, 0.3);
     border-radius: 12px;
     color: #ffffff;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     font-family: 'Rajdhani', sans-serif;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(15px);
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s ease;
+    backdrop-filter: blur(20px);
 }
 
 .card input::placeholder {
     color: rgba(255, 255, 255, 0.6);
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .card input:focus {
     outline: none;
-    border-color: #64b5f6;
-    background: 
-        linear-gradient(145deg, 
-            rgba(255, 255, 255, 0.08), 
-            rgba(255, 255, 255, 0.12)
-        );
-    box-shadow: 
-        0 0 0 4px rgba(100, 181, 246, 0.15),
-        0 8px 30px rgba(100, 181, 246, 0.2),
-        inset 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-color: #00ffff;
+    background: linear-gradient(145deg, 
+        rgba(0, 255, 255, 0.2), 
+        rgba(255, 0, 255, 0.2)
+    );
+    box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.3);
     transform: translateY(-2px);
     color: #ffffff;
 }
@@ -249,110 +198,75 @@ h2 {
 .card label {
     color: rgba(255, 255, 255, 0.9);
     font-family: 'Rajdhani', sans-serif;
-    font-weight: 500;
+    font-weight: 600;
     text-align: left;
     display: block;
     margin-bottom: 8px;
+    font-size: 1rem;
 }
 
 .card button {
     width: 100%;
     padding: 16px 25px;
-    background: linear-gradient(135deg, 
-        #2196f3 0%, 
-        #1976d2 25%, 
-        #1565c0 50%, 
-        #0d47a1 100%
-    );
-    color: white;
     border: none;
     border-radius: 12px;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 800;
     font-family: 'Orbitron', monospace;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 
-        0 10px 30px rgba(33, 150, 243, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    letter-spacing: 2px;
+    margin-bottom: 15px;
 }
 
-.card button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.3), 
-        transparent
-    );
-    transition: left 0.6s;
+/* Primary button (Create Account) */
+.card button[type="submit"],
+.card button:not([onclick]) {
+    background: linear-gradient(135deg, #00ffff, #0080ff);
+    color: #000000;
+    box-shadow: 0 15px 35px rgba(0, 255, 255, 0.4);
 }
 
-.card button:hover::before {
-    left: 100%;
-}
-
-.card button:hover {
-    background: linear-gradient(135deg, 
-        #1976d2 0%, 
-        #1565c0 25%, 
-        #0d47a1 50%, 
-        #01579b 100%
-    );
+.card button[type="submit"]:hover,
+.card button:not([onclick]):hover {
+    background: linear-gradient(135deg, #0080ff, #00ffff);
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 
-        0 15px 40px rgba(33, 150, 243, 0.5),
-        0 0 30px rgba(33, 150, 243, 0.3);
+    box-shadow: 0 20px 45px rgba(0, 255, 255, 0.5);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
-.card button:active {
-    transform: translateY(-1px) scale(1.01);
-    box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
+/* Cancel/Secondary button */
+.card button[onclick*="redirectToLogin"],
+.card button[onclick*="cancel"] {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
+}
+
+.card button[onclick*="redirectToLogin"]:hover,
+.card button[onclick*="cancel"]:hover {
+    background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 20px 45px rgba(255, 107, 107, 0.5);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .card button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
-    background: linear-gradient(135deg, #666, #555);
-}
-
-/* Cancel button styling */
-button[onclick="redirectToLogin()"] {
-    background: linear-gradient(135deg, 
-        #f44336 0%, 
-        #d32f2f 25%, 
-        #c62828 50%, 
-        #b71c1c 100%
-    ) !important;
-    box-shadow: 0 10px 30px rgba(244, 67, 54, 0.4) !important;
-}
-
-button[onclick="redirectToLogin()"]:hover {
-    background: linear-gradient(135deg, 
-        #d32f2f 0%, 
-        #c62828 25%, 
-        #b71c1c 50%, 
-        #a41111 100%
-    ) !important;
-    box-shadow: 
-        0 15px 40px rgba(244, 67, 54, 0.5) !important,
-        0 0 30px rgba(244, 67, 54, 0.3) !important;
+    background: linear-gradient(135deg, #666, #444);
 }
 
 /* Radio button styling */
 .radio-group {
     display: flex;
-    gap: 20px;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: center;
 }
 
 .radio-group label {
@@ -360,32 +274,36 @@ button[onclick="redirectToLogin()"]:hover {
     align-items: center;
     color: rgba(255, 255, 255, 0.9);
     cursor: pointer;
-    padding: 10px 15px;
-    border-radius: 10px;
+    padding: 12px 20px;
+    border-radius: 12px;
     transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    font-weight: 600;
+    min-width: 120px;
+    justify-content: center;
 }
 
 .radio-group label:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(64, 181, 246, 0.3);
+    background: rgba(0, 255, 255, 0.2);
+    border-color: rgba(0, 255, 255, 0.5);
+    transform: translateY(-2px);
 }
 
 .radio-group input[type="radio"] {
     margin-right: 8px;
-    transform: scale(1.2);
-    accent-color: #2196f3;
+    transform: scale(1.3);
+    accent-color: #00ffff;
 }
 
-.radio-group input[type="radio"]:checked + h5 {
-    color: #64b5f6;
+.radio-group input[type="radio"]:checked + * {
+    color: #00ffff;
 }
 
 .radio-group h5 {
     margin: 0;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     transition: color 0.3s ease;
 }
 
@@ -393,8 +311,9 @@ button[onclick="redirectToLogin()"]:hover {
 #desc {
     color: rgba(255, 255, 255, 0.9);
     font-family: 'Rajdhani', sans-serif;
-    font-weight: 500;
+    font-weight: 600;
     margin: 0;
+    font-size: 1rem;
 }
 
 /* Password strength indicator */
@@ -405,33 +324,35 @@ button[onclick="redirectToLogin()"]:hover {
 
 #strengthBar {
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    border-radius: 8px;
     overflow: hidden;
+    height: 8px;
+    margin-bottom: 8px;
 }
 
 #strengthFill {
+    height: 100%;
     transition: all 0.3s ease;
+    border-radius: 8px;
 }
 
 #strengthText {
     font-family: 'Rajdhani', sans-serif;
     font-weight: 600;
     font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 /* Success/Error messages */
 #messageContainer {
-    animation: slideInBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    animation: slideInBounce 0.6s ease;
+    margin-bottom: 20px;
 }
 
 @keyframes slideInBounce {
     0% {
         opacity: 0;
         transform: translateY(-30px) scale(0.8);
-    }
-    60% {
-        opacity: 1;
-        transform: translateY(5px) scale(1.05);
     }
     100% {
         opacity: 1;
@@ -440,29 +361,95 @@ button[onclick="redirectToLogin()"]:hover {
 }
 
 #messageText {
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
     font-family: 'Rajdhani', sans-serif;
-    font-weight: 500;
+    font-weight: 600;
+    padding: 15px 20px;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+#messageText.success {
+    background: linear-gradient(135deg, 
+        rgba(76, 175, 80, 0.9), 
+        rgba(129, 199, 132, 0.9)
+    );
+    border: 2px solid #4caf50;
+    color: white;
+}
+
+#messageText.error {
+    background: linear-gradient(135deg, 
+        rgba(244, 67, 54, 0.9), 
+        rgba(229, 115, 115, 0.9)
+    );
+    border: 2px solid #f44336;
+    color: white;
 }
 
 /* Link styling */
 .card a {
-    color: #4caf50;
+    color: #00ff80;
     text-decoration: none;
     font-weight: 600;
     font-family: 'Rajdhani', sans-serif;
     transition: all 0.3s ease;
-    padding: 5px 10px;
+    padding: 8px 12px;
     border-radius: 8px;
     display: inline-block;
 }
 
 .card a:hover {
-    color: #66bb6a;
-    background: rgba(76, 175, 80, 0.1);
-    transform: translateY(-1px);
-    text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    color: #00ffff;
+    background: rgba(0, 255, 128, 0.2);
+    transform: translateY(-2px);
+    text-shadow: 0 0 15px rgba(0, 255, 128, 0.8);
+    box-shadow: 0 10px 25px rgba(0, 255, 128, 0.3);
+}
+
+/* Loading overlay */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(25px);
+    font-family: 'Orbitron', monospace;
+    color: #00ffff;
+    font-size: 1.2rem;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(0, 255, 255, 0.3);
+    border-top: 4px solid #00ffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Enhanced form validation styles */
+.card input.error {
+    border-color: #f44336 !important;
+    box-shadow: 0 0 0 4px rgba(244, 67, 54, 0.15) !important;
+}
+
+.card input.success {
+    border-color: #4caf50 !important;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15) !important;
 }
 
 /* Responsive design */
@@ -478,7 +465,7 @@ button[onclick="redirectToLogin()"]:hover {
     }
     
     h2 {
-        font-size: 1.7rem;
+        font-size: 1.8rem;
         margin-bottom: 20px;
     }
     
@@ -496,34 +483,29 @@ button[onclick="redirectToLogin()"]:hover {
     .card button {
         padding: 14px 20px;
         font-size: 0.9rem;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
     
     .radio-group {
         flex-direction: column;
         gap: 10px;
+        align-items: center;
     }
     
     .radio-group label {
-        justify-content: center;
+        min-width: 200px;
     }
 }
 
-/* Enhanced visual effects */
-.card {
-    background-image: 
-        radial-gradient(circle at 20% 80%, rgba(64, 181, 246, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(76, 175, 80, 0.05) 0%, transparent 50%);
+/* Enhanced focus states */
+.card input:focus,
+.card button:focus,
+.radio-group input:focus + label {
+    outline: 2px solid rgba(0, 255, 255, 0.5);
+    outline-offset: 2px;
 }
 
-/* Loading overlay */
-#loadingOverlay {
-    backdrop-filter: blur(15px);
-    background: rgba(0, 0, 0, 0.9);
-    font-family: 'Orbitron', monospace;
-}
-
-/* Smooth transitions for all interactive elements */
+/* Smooth transitions */
 * {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
 }

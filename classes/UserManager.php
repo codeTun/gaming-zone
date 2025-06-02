@@ -1,20 +1,46 @@
 <?php
-require_once '../database/new_db_connect.php';
-require_once '../helpers/JWTHelper.php';
-require_once '../helpers/UUIDHelper.php';
+// filepath: c:\xampp\htdocs\gaming-zone\classes\UserManager.php
 
 class UserManager {
     private $db;
     
     public function __construct() {
-        $this->db = DatabaseConnection::getInstance()->getConnection();
+        try {
+            // Try to include database connection with error handling
+            $dbPath = __DIR__ . '/../database/new_db_connect.php';
+            if (file_exists($dbPath)) {
+                require_once $dbPath;
+                $this->db = DatabaseConnection::getInstance()->getConnection();
+            } else {
+                // Fallback to simple database connection
+                $this->connectToDatabase();
+            }
+        } catch (Exception $e) {
+            // Fallback database connection
+            $this->connectToDatabase();
+        }
+    }
+
+    private function connectToDatabase() {
+        try {
+            // Basic database connection - update with your credentials
+            $host = 'localhost';
+            $dbname = 'gaming_zone';
+            $username = 'root';
+            $password = '';
+            
+            $this->db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            throw new Exception('Database connection failed: ' . $e->getMessage());
+        }
     }
     
     // Register a new user
     public function registerUser($name, $username, $email, $password, $birthDate = null, $gender = null, $role = 'USER') {
         try {
             // Check if user already exists
-            $checkStmt = $this->db->prepare("SELECT id FROM User WHERE email = ? OR username = ?");
+            $checkStmt = $this->db->prepare("SELECT id FROM Users WHERE email = ? OR username = ?");
             $checkStmt->execute([$email, $username]);
             
             if ($checkStmt->rowCount() > 0) {
@@ -24,15 +50,15 @@ class UserManager {
             // Hash password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
-            // Generate UUID for user
-            $userId = $this->generateUUID();
+            // Generate ID
+            $userId = 'user-' . uniqid();
             
             // Insert user
-            $stmt = $this->db->prepare("INSERT INTO User (id, name, username, email, password, role, birthDate, gender) 
+            $stmt = $this->db->prepare("INSERT INTO Users (id, name, username, email, password, role, birthDate, gender) 
                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$userId, $name, $username, $email, $hashedPassword, $role, $birthDate, $gender]);
             
-            // Prepare user data for token
+            // Prepare user data for response
             $userData = [
                 'id' => $userId,
                 'name' => $name,
@@ -42,65 +68,59 @@ class UserManager {
                 'gender' => $gender
             ];
             
-            // Generate JWT token
-            $payload = JWTHelper::createUserPayload($userData);
-            $jwtToken = JWTHelper::generateToken($payload);
-            
-            // Store token in database for tracking
-            $this->storeToken($userId, $jwtToken);
+            // Generate token
+            $token = bin2hex(random_bytes(32));
             
             return [
                 "success" => true, 
                 "user" => $userData,
-                "token" => $jwtToken,
+                "token" => $token,
                 "token_type" => "Bearer"
             ];
         } catch (PDOException $e) {
-            return ["success" => false, "message" => "Registration error: " . $e->getMessage()];
+            error_log('Registration error: ' . $e->getMessage());
+            return ["success" => false, "message" => "Registration error occurred"];
         }
     }
     
     // User login
     public function loginUser($email, $password) {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM User WHERE email = ?");
+            $stmt = $this->db->prepare("SELECT * FROM Users WHERE email = ?");
             $stmt->execute([$email]);
             
             if ($stmt->rowCount() == 0) {
                 return ["success" => false, "message" => "User not found"];
             }
             
-            $user = $stmt->fetch();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if (password_verify($password, $user['password'])) {
                 // Remove password from user data
                 unset($user['password']);
                 
-                // Generate JWT token
-                $payload = JWTHelper::createUserPayload($user);
-                $jwtToken = JWTHelper::generateToken($payload);
-                
-                // Store token in database for tracking
-                $this->storeToken($user['id'], $jwtToken);
+                // Generate simple token
+                $token = bin2hex(random_bytes(32));
                 
                 return [
                     "success" => true,
                     "user" => $user,
-                    "token" => $jwtToken,
+                    "token" => $token,
                     "token_type" => "Bearer"
                 ];
             } else {
                 return ["success" => false, "message" => "Invalid password"];
             }
         } catch (PDOException $e) {
-            return ["success" => false, "message" => "Login error: " . $e->getMessage()];
+            error_log('Login error: ' . $e->getMessage());
+            return ["success" => false, "message" => "Login error occurred"];
         }
     }
     
     // Store token in database for tracking/blacklisting
     private function storeToken($userId, $token) {
         try {
-            $tokenId = $this->generateUUID();
+            $tokenId = 'token-' . uniqid(); // Simple ID generation instead of UUID
             $expiry = date('Y-m-d H:i:s', strtotime('+7 days'));
             
             $stmt = $this->db->prepare("INSERT INTO Token (id, token, type, expiresAt, userId) VALUES (?, ?, 'AUTH', ?, ?)");
@@ -111,19 +131,12 @@ class UserManager {
         }
     }
     
-    // Verify JWT token
+    // Verify token (simplified without JWT dependency)
     public function verifyToken($token) {
-        $result = JWTHelper::verifyToken($token);
-        
-        if (!$result['success']) {
-            return $result;
-        }
-        
-        // Check if token exists in database and is not blacklisted
         try {
             $stmt = $this->db->prepare("SELECT t.*, u.id, u.name, u.username, u.email, u.role, u.gender, u.imageUrl
                                       FROM Token t
-                                      JOIN User u ON t.userId = u.id
+                                      JOIN Users u ON t.userId = u.id
                                       WHERE t.token = ? AND (t.expiresAt IS NULL OR t.expiresAt > NOW())");
             $stmt->execute([$token]);
             
@@ -131,7 +144,7 @@ class UserManager {
                 return ["success" => false, "message" => "Token not found or expired in database"];
             }
             
-            $tokenData = $stmt->fetch();
+            $tokenData = $stmt->fetch(PDO::FETCH_ASSOC);
             
             return [
                 "success" => true, 
@@ -143,8 +156,7 @@ class UserManager {
                     'role' => $tokenData['role'],
                     'gender' => $tokenData['gender'],
                     'imageUrl' => $tokenData['imageUrl']
-                ],
-                "payload" => $result['payload']
+                ]
             ];
         } catch (PDOException $e) {
             return ["success" => false, "message" => "Token verification error: " . $e->getMessage()];
@@ -163,7 +175,7 @@ class UserManager {
         }
     }
     
-    // Refresh token
+    // Refresh token (simplified without JWT)
     public function refreshToken($oldToken) {
         $verifyResult = $this->verifyToken($oldToken);
         
@@ -174,8 +186,7 @@ class UserManager {
         $user = $verifyResult['user'];
         
         // Generate new token
-        $payload = JWTHelper::createUserPayload($user);
-        $newToken = JWTHelper::generateToken($payload);
+        $newToken = bin2hex(random_bytes(32));
         
         try {
             // Remove old token
@@ -198,22 +209,17 @@ class UserManager {
     // Get user by ID
     public function getUserById($userId) {
         try {
-            $stmt = $this->db->prepare("SELECT id, name, username, email, role, birthDate, gender, imageUrl, createdAt FROM User WHERE id = ?");
+            $stmt = $this->db->prepare("SELECT id, name, username, email, role, birthDate, gender, imageUrl, createdAt FROM Users WHERE id = ?");
             $stmt->execute([$userId]);
             
             if ($stmt->rowCount() == 0) {
                 return ["success" => false, "message" => "User not found"];
             }
             
-            return ["success" => true, "user" => $stmt->fetch()];
+            return ["success" => true, "user" => $stmt->fetch(PDO::FETCH_ASSOC)];
         } catch (PDOException $e) {
             return ["success" => false, "message" => "Error: " . $e->getMessage()];
         }
-    }
-    
-    // Generate UUID
-    private function generateUUID() {
-        return UUIDHelper::generate();
     }
 }
 ?>
