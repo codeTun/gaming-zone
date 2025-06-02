@@ -191,32 +191,144 @@
   font-size: 0.875rem;
 }
 
-.game_rating {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+.game_loading, .game_error, .game_no_data {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  font-size: 1.1rem;
+  font-style: italic;
 }
 
-.game_rating i {
-  color: #f59e0b;
-  width: 1rem;
-  height: 1rem;
+.game_error {
+  color: #ef4444;
+}
+
+.game_name_cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.game_thumb {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.game_title {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.game_subtitle {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.game_category_badge {
+  background: #3b82f6;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.game_rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.game_rating_value {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.game_stars {
+  display: flex;
+  gap: 2px;
+}
+
+.game_star {
+  width: 14px;
+  height: 14px;
+}
+
+.game_star_filled {
+  color: #fbbf24;
+}
+
+.game_star_half {
+  color: #fbbf24;
+}
+
+.game_star_empty {
+  color: #6b7280;
+}
+
+.game_actions {
+  display: flex;
+  gap: 8px;
+}
+
+.game_edit_btn, .game_delete_btn {
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.game_edit_btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.game_edit_btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
 }
 
 .game_delete_btn {
-  background: none;
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  padding: 0.25rem;
-  transition: color 0.2s;
+  background: #ef4444;
+  color: white;
 }
 
 .game_delete_btn:hover {
-  color: #dc2626;
+  background: #dc2626;
+  transform: translateY(-1px);
 }
 
-.game_delete_btn i {
-  width: 1.25rem;
-  height: 1.25rem;
+.game_primary_btn {
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.game_primary_btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(96, 165, 250, 0.3);
+}
+
+.game_date {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.game_players_count {
+  color: #94a3b8;
+  font-size: 0.875rem;
 }

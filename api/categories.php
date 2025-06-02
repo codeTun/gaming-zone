@@ -20,46 +20,21 @@ try {
     switch ($method) {
         case 'GET':
             if (isset($_GET['id'])) {
+                // Get specific category
                 $stmt = $pdo->prepare("SELECT * FROM Category WHERE id = ?");
                 $stmt->execute([$_GET['id']]);
                 $category = $stmt->fetch(PDO::FETCH_ASSOC);
                 echo json_encode($category ?: ['error' => 'Category not found']);
             } else {
+                // Get all categories
                 $stmt = $pdo->query("SELECT * FROM Category ORDER BY name ASC");
                 echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
             }
             break;
 
-        case 'POST':
-            // Create new category - auto-generate ID if not provided
-            $id = isset($input['id']) ? $input['id'] : 'cat-' . uniqid();
-            $stmt = $pdo->prepare("INSERT INTO Category (id, name) VALUES (?, ?)");
-            $stmt->execute([$id, $input['name']]);
-            echo json_encode(['success' => true, 'id' => $id, 'message' => 'Category created successfully']);
-            break;
-
-        case 'PUT':
-            if (!isset($_GET['id'])) {
-                echo json_encode(['error' => 'Category ID required']);
-                break;
-            }
-            $stmt = $pdo->prepare("UPDATE Category SET name = ? WHERE id = ?");
-            $stmt->execute([$input['name'], $_GET['id']]);
-            echo json_encode(['success' => true, 'message' => 'Category updated successfully']);
-            break;
-
-        case 'DELETE':
-            if (!isset($_GET['id'])) {
-                echo json_encode(['error' => 'Category ID required']);
-                break;
-            }
-            $stmt = $pdo->prepare("DELETE FROM Category WHERE id = ?");
-            $stmt->execute([$_GET['id']]);
-            echo json_encode(['success' => true, 'message' => 'Category deleted successfully']);
-            break;
-
         default:
             echo json_encode(['error' => 'Method not allowed']);
+            break;
     }
 } catch (PDOException $e) {
     echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);

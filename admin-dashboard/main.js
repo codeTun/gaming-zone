@@ -460,5 +460,94 @@ class DashboardManager {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM loaded - main.js");
+  
+  // Initialize navigation
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      const sectionName = item.getAttribute('data-section');
+      console.log(`Navigation: switching to section "${sectionName}"`);
+      
+      // Hide all sections
+      document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected section
+      const targetSection = document.getElementById(sectionName);
+      if (targetSection) {
+        targetSection.classList.add('active');
+      }
+      
+      // Update nav items
+      document.querySelectorAll('.nav-item').forEach(navItem => {
+        navItem.classList.remove('active');
+      });
+      item.classList.add('active');
+      
+      // Initialize the appropriate manager based on section
+      try {
+        if (sectionName === 'events') {
+          console.log('Events section activated, initializing EventManager');
+          if (window.eventManager) {
+            await window.eventManager.init();
+          } else {
+            console.error('EventManager not found on window object');
+          }
+        } else if (sectionName === 'games') {
+          console.log('Games section activated, initializing GameManager');
+          if (window.gameManager) {
+            await window.gameManager.init();
+          } else {
+            console.error('GameManager not found on window object');
+          }
+        } else if (sectionName === 'tournaments') {
+          console.log('Tournaments section activated, initializing TournamentManager');
+          if (window.tournamentManager) {
+            await window.tournamentManager.init();
+            await window.tournamentManager.loadTournaments();
+          } else {
+            console.error('TournamentManager not found on window object');
+          }
+        }
+      } catch (error) {
+        console.error(`Failed to initialize ${sectionName} section:`, error);
+      }
+    });
+  });
+
+  // Check if we should initialize any manager based on current active section
+  const activeSection = document.querySelector('.content-section.active');
+  if (activeSection) {
+    const sectionId = activeSection.id;
+    console.log(`Initial active section: ${sectionId}`);
+    
+    if (sectionId === 'events' && window.eventManager) {
+      console.log('Initializing EventManager for active events section');
+      window.eventManager.init();
+    } else if (sectionId === 'games' && window.gameManager) {
+      console.log('Initializing GameManager for active games section');
+      window.gameManager.init();
+    }
+  }
+  
+  // Global error handler
+  window.addEventListener('error', (event) => {
+    console.error('Global error caught:', event.message);
+    alert('An unexpected error occurred. Please try again later.');
+  });
+  
+  // Prevent form submission on Enter key press
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        console.log('Enter key pressed - form submission prevented');
+      }
+    });
+  });
+  
   window.dashboardManager = new DashboardManager();
 });
