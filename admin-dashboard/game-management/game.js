@@ -119,14 +119,14 @@ class GameManager {
         </td>
         <td>
           <div class="game_rating">
-            <span class="game_rating_value">${game.averageRating || '0.0'}</span>
+            <span class="game_rating_value">${parseFloat(game.averageRating || 0).toFixed(1)}</span>
             <div class="game_stars">
-              ${this.generateStars(game.averageRating || 0)}
+              ${this.generateStars(parseFloat(game.averageRating || 0))}
             </div>
           </div>
         </td>
         <td>
-          <span class="game_players_count">N/A</span>
+          <span class="game_min_age">${game.minAge ? game.minAge + '+' : 'All Ages'}</span>
         </td>
         <td>
           <span class="game_date">${new Date(game.createdAt).toLocaleDateString()}</span>
@@ -149,19 +149,27 @@ class GameManager {
 
   generateStars(rating) {
     const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
+    const hasHalfStar = (rating % 1) >= 0.5;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
     
     let stars = '';
+    
+    // Add full stars
     for (let i = 0; i < fullStars; i++) {
       stars += '<i data-lucide="star" class="game_star game_star_filled"></i>';
     }
+    
+    // Add half star if needed
     if (hasHalfStar) {
       stars += '<i data-lucide="star" class="game_star game_star_half"></i>';
     }
+    
+    // Add empty stars
     for (let i = 0; i < emptyStars; i++) {
       stars += '<i data-lucide="star" class="game_star game_star_empty"></i>';
     }
+    
+    console.log(`⭐ Rating ${rating}: ${fullStars} full, ${hasHalfStar ? 1 : 0} half, ${emptyStars} empty stars`);
     return stars;
   }
 
@@ -213,217 +221,9 @@ class GameManager {
     }
   }
 
-  openGameModal(game = null) {
-    console.log("🔍 Opening game modal for database operation, game:", game);
-    
-    // Create modal HTML dynamically if it doesn't exist
-    this.createGameModalIfNeeded();
-    
-    const modal = document.getElementById("game_modal");
-    const title = document.getElementById("game_modal_title");
-    const form = document.getElementById("game_form");
-
-    if (!modal || !title || !form) {
-      console.error("Game modal elements not found!");
-      return;
-    }
-
-    if (game) {
-      this.currentEditId = game.id;
-      title.textContent = "Edit Game in Database";
-      console.log('📝 Editing game from database:', game.id);
-    } else {
-      this.currentEditId = null;
-      title.textContent = "Add New Game to Database";
-      console.log('📝 Adding new game to database');
-      form.reset();
-    }
-
-    modal.style.display = "flex";
-
-    setTimeout(() => {
-      this.populateCategoryDropdown();
-      
-      if (game) {
-        this.populateGameForm(game);
-      }
-
-      document.getElementById("game_name")?.focus();
-    }, 100);
-  }
-
-  createGameModalIfNeeded() {
-    if (document.getElementById("game_modal")) return;
-    
-    const modalHTML = `
-      <div class="game_modal" id="game_modal" style="display: none;">
-        <div class="game_modal_content">
-          <div class="game_modal_header">
-            <h2 id="game_modal_title">Add New Game</h2>
-            <button class="game_close_btn" id="game_close_modal">
-              <i data-lucide="x"></i>
-            </button>
-          </div>
-          <form id="game_form" class="game_form">
-            <div class="game_form_group">
-              <label for="game_name">Game Name *</label>
-              <input type="text" id="game_name" class="game_input" required />
-            </div>
-            
-            <div class="game_form_row">
-              <div class="game_form_group">
-                <label for="game_category">Category *</label>
-                <select id="game_category" class="game_select" required>
-                  <option value="">Select Category</option>
-                </select>
-              </div>
-              
-              <div class="game_form_group">
-                <label for="game_min_age">Minimum Age</label>
-                <input type="number" id="game_min_age" class="game_input" min="3" max="18" />
-              </div>
-            </div>
-            
-            <div class="game_form_group">
-              <label for="game_target_gender">Target Gender</label>
-              <select id="game_target_gender" class="game_select">
-                <option value="">Any</option>
-                <option value="MALE">Male</option>
-                <option value="FEMALE">Female</option>
-              </select>
-            </div>
-            
-            <div class="game_form_group">
-              <label for="game_description">Description</label>
-              <textarea id="game_description" class="game_textarea" rows="4"></textarea>
-            </div>
-            
-            <div class="game_form_group">
-              <label for="game_image">Image URL</label>
-              <input type="url" id="game_image" class="game_input" />
-            </div>
-            
-            <div class="game_form_actions">
-              <button type="button" class="game_secondary_btn" id="game_cancel_btn">
-                <i data-lucide="x"></i>
-                Cancel
-              </button>
-              <button type="submit" class="game_primary_btn">
-                <i data-lucide="check"></i>
-                Save Game
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    this.bindModalEvents();
-  }
-
-  bindModalEvents() {
-    const modal = document.getElementById("game_modal");
-    const closeBtn = document.getElementById("game_close_modal");
-    const cancelBtn = document.getElementById("game_cancel_btn");
-    const form = document.getElementById("game_form");
-
-    if (closeBtn) closeBtn.onclick = () => this.closeGameModal();
-    if (cancelBtn) cancelBtn.onclick = () => this.closeGameModal();
-    if (form) form.onsubmit = (e) => this.handleGameSubmit(e);
-    
-    if (modal) {
-      modal.onclick = (e) => {
-        if (e.target === modal) this.closeGameModal();
-      };
-    }
-  }
-
-  populateCategoryDropdown() {
-    const categorySelect = document.getElementById("game_category");
-    if (!categorySelect) return;
-
-    categorySelect.innerHTML = '<option value="">Select Category</option>' +
-      this.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
-  }
-
-  populateGameForm(game) {
-    document.getElementById("game_name").value = game.name || "";
-    document.getElementById("game_category").value = game.categoryId || "";
-    document.getElementById("game_min_age").value = game.minAge || "";
-    document.getElementById("game_target_gender").value = game.targetGender || "";
-    document.getElementById("game_description").value = game.description || "";
-    document.getElementById("game_image").value = game.imageUrl || "";
-  }
-
-  async handleGameSubmit(e) {
-    e.preventDefault();
-    
-    console.log('💾 Saving game to database...');
-    
-    const submitBtn = document.querySelector('#game_form button[type="submit"]');
-    const originalBtnText = submitBtn?.innerHTML || 'Save Game';
-    if (submitBtn) {
-      submitBtn.innerHTML = '<i data-lucide="loader"></i>Saving to DB...';
-      submitBtn.disabled = true;
-      lucide.createIcons();
-    }
-
-    try {
-      const gameData = {
-        name: document.getElementById('game_name').value.trim(),
-        description: document.getElementById('game_description').value.trim(),
-        imageUrl: document.getElementById('game_image').value.trim(),
-        categoryId: document.getElementById('game_category').value,
-        minAge: document.getElementById('game_min_age').value || null,
-        targetGender: document.getElementById('game_target_gender').value || null
-      };
-      
-      console.log('📊 Game data for database:', gameData);
-      
-      // Validate required fields
-      if (!gameData.name) throw new Error('Game name is required');
-      if (!gameData.categoryId) throw new Error('Category is required');
-
-      // Save to database via API
-      let result;
-      if (this.currentEditId) {
-        console.log(`🔄 Updating game in database, ID: ${this.currentEditId}`);
-        result = await window.apiService.put(`/games.php?id=${this.currentEditId}`, gameData);
-      } else {
-        console.log('➕ Creating new game in database');
-        result = await window.apiService.post('/games.php', gameData);
-      }
-      
-      console.log('✅ Database operation successful:', result);
-      
-      if (result.success) {
-        this.showSuccess(this.currentEditId ? 'Game updated in database' : 'Game saved to database successfully');
-        this.closeGameModal();
-        await this.loadGamesFromAPI(); // Refresh from database
-      } else {
-        throw new Error(result.error || 'Database operation failed');
-      }
-
-    } catch (error) {
-      console.error('❌ Failed to save to database:', error);
-      this.showError('Failed to save to database: ' + error.message);
-    } finally {
-      if (submitBtn) {
-        submitBtn.innerHTML = originalBtnText;
-        submitBtn.disabled = false;
-      }
-      lucide.createIcons();
-    }
-  }
-
-  closeGameModal() {
-    const modal = document.getElementById("game_modal");
-    if (modal) modal.style.display = "none";
-    this.currentEditId = null;
-  }
-
   bindEvents() {
+    console.log("🔗 Setting up game event listeners...");
+    
     const searchInput = document.getElementById('game_search_input');
     const genreFilter = document.getElementById('game_genre_filter');
 
@@ -433,24 +233,6 @@ class GameManager {
 
     if (genreFilter) {
       genreFilter.addEventListener('change', (e) => this.filterByGenre(e.target.value));
-    }
-
-    // Add "Add Game" button if it doesn't exist
-    this.createAddGameButtonIfNeeded();
-  }
-
-  createAddGameButtonIfNeeded() {
-    if (document.getElementById('game_add_btn')) return;
-    
-    const actionBar = document.querySelector('.game_search_filter');
-    if (actionBar) {
-      const addBtn = document.createElement('button');
-      addBtn.id = 'game_add_btn';
-      addBtn.className = 'game_primary_btn';
-      addBtn.innerHTML = '<i data-lucide="plus-circle"></i>Add New Game';
-      addBtn.onclick = () => this.openGameModal();
-      actionBar.appendChild(addBtn);
-      lucide.createIcons();
     }
   }
 

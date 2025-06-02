@@ -244,7 +244,8 @@
 
 .game_rating_value {
   font-weight: 600;
-  color: #f1f5f9;
+  color: #f59e0b;
+  font-size: 0.875rem;
 }
 
 .game_stars {
@@ -253,20 +254,37 @@
 }
 
 .game_star {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
+  transition: all 0.2s;
 }
 
 .game_star_filled {
-  color: #fbbf24;
+  color: #f59e0b;
+  fill: #f59e0b;
 }
 
 .game_star_half {
-  color: #fbbf24;
+  color: #f59e0b;
+  fill: #f59e0b;
+  opacity: 0.5;
 }
 
 .game_star_empty {
-  color: #6b7280;
+  color: #64748b;
+  fill: none;
+  stroke: #64748b;
+  stroke-width: 1px;
+}
+
+.game_min_age {
+  background: #10b981;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
 }
 
 .game_actions {
