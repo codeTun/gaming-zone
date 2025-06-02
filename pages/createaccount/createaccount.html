@@ -1,60 +1,479 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account - Gaming Zone</title>
+    <link rel="stylesheet" href="main1.css" />
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account</title>
-    <link rel="stylesheet" href="main1.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
+  <body>
+    <!-- Loading overlay -->
+    <div
+      id="loadingOverlay"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        backdrop-filter: blur(5px);
+      "
+    >
+      <div style="color: white; text-align: center; font-size: 1.2rem">
+        <div
+          style="
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+          "
+        ></div>
+        Creating your account...
+      </div>
+    </div>
 
-<body>
-    <form id="registrationForm" onsubmit="return validatePasswords()">
-        <div class="container">
-            <div class="card">
-                <div class="back-arrow">
-                    <a href="/pages/login/login.html">
-                        <i class="fas fa-arrow-left"></i>
-                    </a>
-                </div>
+    <form id="registrationForm" onsubmit="handleRegistration(event)">
+      <div class="container">
+        <div class="card">
+          <div class="back-arrow">
+            <a href="/gaming-zone/pages/login/login.html">
+              <i class="fas fa-arrow-left"></i>
+            </a>
+          </div>
 
-                <h2 style="color: azure;">Create your account</h2>
-                <img src='/assets/images/logo.png'
-                    alt="Gaming Logo">
+          <h2 style="color: azure">Create your account</h2>
+          <img src="/gaming-zone/assets/images/logo.png" alt="Gaming Logo" />
 
-                <input type="text" id="username" placeholder="Enter your username" required />
-                <input type="email" id="email" placeholder="Enter your email" required />
-                <label for="birthday">Birthday:</label>
-                <input type="date" id="birthday" name="birthday" required />
+          <!-- Full Name -->
+          <input
+            type="text"
+            id="fullName"
+            placeholder="Enter your full name"
+            required
+            minlength="2"
+            maxlength="100"
+          />
 
-                <input type="password" id="password" placeholder="Enter your password" required minlength="6" />
-                <input type="password" id="confirmPassword" placeholder="Confirm your password" required minlength="6" />
+          <!-- Username -->
+          <input
+            type="text"
+            id="username"
+            placeholder="Enter your username"
+            required
+            minlength="3"
+            maxlength="50"
+            pattern="[a-zA-Z0-9_]+"
+            title="Username can only contain letters, numbers, and underscores"
+          />
 
-                <div style="display: flex; align-items: center;">
-                    <h5 id="desc">Choose your sex &nbsp; &nbsp;</h5>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="gender" value="M" required />
-                            <h5 style="font-size: 1.2em;">&#128102;</h5>
-                        </label>
-                        <label>
-                            <input type="radio" name="gender" value="F" required />
-                            <h5 style="font-size: 1.2em;">&#128105;</h5>
-                        </label>
-                    </div>
-                </div>
+          <!-- Email -->
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          />
 
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit">Create account</button>
-                    <button type="button" style="background-color: rgb(190, 4, 4);" onclick="redirectToLogin()">Cancel</button>
-                </div>
+          <!-- Birthday -->
+          <label
+            for="birthday"
+            style="
+              color: azure;
+              font-size: 0.9rem;
+              margin-bottom: 5px;
+              display: block;
+            "
+            >Birthday:</label
+          >
+          <input type="date" id="birthday" name="birthday" required max="" />
+
+          <!-- Password -->
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            required
+            minlength="6"
+            maxlength="255"
+          />
+
+          <!-- Confirm Password -->
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm your password"
+            required
+            minlength="6"
+            maxlength="255"
+          />
+
+          <!-- Password strength indicator -->
+          <div
+            id="passwordStrength"
+            style="margin-top: 5px; font-size: 0.8rem; display: none"
+          >
+            <div
+              id="strengthBar"
+              style="
+                height: 4px;
+                background: #333;
+                border-radius: 2px;
+                margin-bottom: 5px;
+              "
+            >
+              <div
+                id="strengthFill"
+                style="
+                  height: 100%;
+                  width: 0%;
+                  border-radius: 2px;
+                  transition: all 0.3s;
+                "
+              ></div>
             </div>
+            <span id="strengthText"></span>
+          </div>
+
+          <!-- Gender Selection -->
+          <div style="display: flex; align-items: center; margin: 20px 0">
+            <h5 id="desc" style="color: azure">
+              Choose your gender &nbsp; &nbsp;
+            </h5>
+            <div class="radio-group">
+              <label style="cursor: pointer; margin-right: 15px">
+                <input type="radio" name="gender" value="MALE" required />
+                <h5 style="font-size: 1.2em; margin: 0 5px">&#128102; Male</h5>
+              </label>
+              <label style="cursor: pointer">
+                <input type="radio" name="gender" value="FEMALE" required />
+                <h5 style="font-size: 1.2em; margin: 0 5px">
+                  &#128105; Female
+                </h5>
+              </label>
+            </div>
+          </div>
+
+          <!-- Error/Success Messages -->
+          <div
+            id="messageContainer"
+            style="margin: 15px 0; text-align: center; display: none"
+          >
+            <div
+              id="messageText"
+              style="padding: 10px; border-radius: 5px; font-size: 0.9rem"
+            ></div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display: flex; gap: 10px; margin-top: 20px">
+            <button type="submit" id="submitBtn" style="flex: 1">
+              <i class="fas fa-user-plus"></i> Create Account
+            </button>
+            <button
+              type="button"
+              style="background-color: rgb(190, 4, 4); flex: 1"
+              onclick="redirectToLogin()"
+            >
+              <i class="fas fa-times"></i> Cancel
+            </button>
+          </div>
+
+          <!-- Login Link -->
+          <div
+            style="
+              text-align: center;
+              margin-top: 20px;
+              color: #ccc;
+              font-size: 0.9rem;
+            "
+          >
+            Already have an account?
+            <a
+              href="/gaming-zone/pages/login/login.html"
+              style="color: #4caf50; text-decoration: none"
+              >Sign in here</a
+            >
+          </div>
         </div>
+      </div>
     </form>
 
-    <script src="createaccountscript.js"></script>
-</body>
+    <script>
+      console.log("🚀 Create Account page loaded");
 
+      // Set max date to 18 years ago (minimum age requirement)
+      document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date();
+        const maxDate = new Date(
+          today.getFullYear() - 13,
+          today.getMonth(),
+          today.getDate()
+        ); // Minimum 13 years old
+        const minDate = new Date(
+          today.getFullYear() - 100,
+          today.getMonth(),
+          today.getDate()
+        ); // Maximum 100 years old
+
+        document.getElementById("birthday").max = maxDate
+          .toISOString()
+          .split("T")[0];
+        document.getElementById("birthday").min = minDate
+          .toISOString()
+          .split("T")[0];
+
+        // Add password strength checker
+        const passwordInput = document.getElementById("password");
+        passwordInput.addEventListener("input", checkPasswordStrength);
+      });
+
+      // Password strength checker
+      function checkPasswordStrength() {
+        const password = document.getElementById("password").value;
+        const strengthContainer = document.getElementById("passwordStrength");
+        const strengthFill = document.getElementById("strengthFill");
+        const strengthText = document.getElementById("strengthText");
+
+        if (password.length === 0) {
+          strengthContainer.style.display = "none";
+          return;
+        }
+
+        strengthContainer.style.display = "block";
+
+        let strength = 0;
+        let feedback = "";
+
+        // Length check
+        if (password.length >= 8) strength += 25;
+
+        // Uppercase check
+        if (/[A-Z]/.test(password)) strength += 25;
+
+        // Lowercase check
+        if (/[a-z]/.test(password)) strength += 25;
+
+        // Number/Special character check
+        if (/[\d\W]/.test(password)) strength += 25;
+
+        // Update visual feedback
+        if (strength < 50) {
+          strengthFill.style.background = "#ff4444";
+          feedback = "Weak";
+        } else if (strength < 75) {
+          strengthFill.style.background = "#ffaa00";
+          feedback = "Medium";
+        } else {
+          strengthFill.style.background = "#00aa00";
+          feedback = "Strong";
+        }
+
+        strengthFill.style.width = strength + "%";
+        strengthText.textContent = feedback;
+        strengthText.style.color = strengthFill.style.background;
+      }
+
+      // Validate passwords match
+      function validatePasswords() {
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+          showMessage("Passwords do not match!", "error");
+          return false;
+        }
+        return true;
+      }
+
+      // Handle form submission
+      async function handleRegistration(event) {
+        event.preventDefault();
+        console.log("📝 Handling registration form submission...");
+
+        // Validate passwords first
+        if (!validatePasswords()) {
+          return;
+        }
+
+        // Show loading state
+        showLoading(true);
+        const submitBtn = document.getElementById("submitBtn");
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+
+        // Collect form data
+        const formData = {
+          name: document.getElementById("fullName").value.trim(),
+          username: document.getElementById("username").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value,
+          birthDate: document.getElementById("birthday").value,
+          gender: document.querySelector('input[name="gender"]:checked').value,
+        };
+
+        console.log("📤 Sending registration data:", {
+          ...formData,
+          password: "[HIDDEN]",
+        });
+
+        try {
+          const response = await fetch(
+            "http://localhost/gaming-zone/api/auth.php",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                action: "register",
+                ...formData,
+              }),
+            }
+          );
+
+          console.log("📡 Response status:", response.status);
+
+          const result = await response.json();
+          console.log("📥 Registration response:", result);
+
+          if (result.success) {
+            showMessage(
+              "🎉 Account created successfully! Redirecting to login...",
+              "success"
+            );
+
+            // Reset form
+            document.getElementById("registrationForm").reset();
+
+            // Redirect to login after 2 seconds
+            setTimeout(() => {
+              window.location.href = "/pages/login/login.html?registered=true";
+            }, 2000);
+          } else {
+            throw new Error(result.error || "Registration failed");
+          }
+        } catch (error) {
+          console.error("❌ Registration failed:", error);
+          showMessage("❌ Registration failed: " + error.message, "error");
+        } finally {
+          // Reset button state
+          showLoading(false);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        }
+      }
+
+      // Show loading overlay
+      function showLoading(show) {
+        const overlay = document.getElementById("loadingOverlay");
+        overlay.style.display = show ? "flex" : "none";
+      }
+
+      // Show message function
+      function showMessage(message, type) {
+        const container = document.getElementById("messageContainer");
+        const text = document.getElementById("messageText");
+
+        text.textContent = message;
+        container.style.display = "block";
+
+        if (type === "success") {
+          text.style.background = "rgba(76, 175, 80, 0.1)";
+          text.style.color = "#4CAF50";
+          text.style.border = "1px solid #4CAF50";
+        } else {
+          text.style.background = "rgba(244, 67, 54, 0.1)";
+          text.style.color = "#f44336";
+          text.style.border = "1px solid #f44336";
+        }
+
+        // Auto-hide after 5 seconds for errors
+        if (type === "error") {
+          setTimeout(() => {
+            container.style.display = "none";
+          }, 5000);
+        }
+      }
+
+      // Redirect to login
+      function redirectToLogin() {
+        if (confirm("Are you sure you want to cancel registration?")) {
+          window.location.href = "/gaming-zone/pages/loginuser/index.html";
+        }
+      }
+
+      // Real-time validation
+      document.addEventListener("DOMContentLoaded", function () {
+        // Username validation
+        document
+          .getElementById("username")
+          .addEventListener("input", function () {
+            const username = this.value;
+            if (username.length > 0 && !/^[a-zA-Z0-9_]+$/.test(username)) {
+              this.setCustomValidity(
+                "Username can only contain letters, numbers, and underscores"
+              );
+            } else {
+              this.setCustomValidity("");
+            }
+          });
+
+        // Confirm password validation
+        document
+          .getElementById("confirmPassword")
+          .addEventListener("input", function () {
+            const password = document.getElementById("password").value;
+            const confirmPassword = this.value;
+
+            if (confirmPassword.length > 0 && password !== confirmPassword) {
+              this.setCustomValidity("Passwords do not match");
+            } else {
+              this.setCustomValidity("");
+            }
+          });
+      });
+
+      // Add CSS animation for spinner
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            .radio-group label {
+                display: flex;
+                align-items: center;
+                color: azure;
+            }
+            
+            .radio-group input[type="radio"] {
+                margin-right: 5px;
+            }
+        `;
+      document.head.appendChild(style);
+
+      console.log("✅ Create Account page scripts loaded");
+    </script>
+  </body>
 </html>

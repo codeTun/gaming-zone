@@ -214,46 +214,132 @@
     </div>
 
     <!-- Tournament Registration Modal -->
-    <div class="tournament-modal" id="registrationModal">
-      <div class="tournament-modal-content">
-        <div class="tournament-modal-header">
-          <h2>Tournament Registration</h2>
-          <button class="tournament-modal-close" onclick="closeModal()">
-            <i data-lucide="x"></i>
+    <div class="tournament-modal" id="registrationModal" style="
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(8px);
+    ">
+      <div class="tournament-modal-content" style="
+        background: linear-gradient(135deg, #1e293b, #334155);
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        border: 1px solid #475569;
+        position: relative;
+      ">
+        <div class="tournament-modal-header" style="
+          padding: 30px 30px 20px 30px;
+          border-bottom: 1px solid #475569;
+          text-align: center;
+        ">
+          <h2 style="margin: 0; color: #f8fafc; font-size: 1.8rem; font-weight: 700; margin-bottom: 8px;">🏆 Tournament Registration</h2>
+          <p id="tournamentTitle" style="color: #94a3b8; margin: 0; font-size: 1.1rem;"></p>
+          <button class="tournament-modal-close" onclick="closeModal()" style="
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #94a3b8;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+          " onmouseover="this.style.backgroundColor='#475569'; this.style.color='#ef4444'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='#94a3b8'">
+            ✕
           </button>
         </div>
-        <div class="tournament-modal-body">
-          <h3 id="tournamentTitle" class="tournament-item-title"></h3>
+        <div class="tournament-modal-body" style="padding: 30px;">
           <form id="registrationForm" onsubmit="handleRegistration(event)">
-            <div class="tournament-form-group">
-              <label for="teamName">Team Name</label>
-              <input type="text" id="teamName" required />
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e2e8f0; font-size: 0.9rem;">👤 Your Username</label>
+              <input type="text" name="username" id="regUsername" required style="
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px solid #475569;
+                border-radius: 12px;
+                font-size: 0.9rem;
+                background: #ffffff;
+                color: #1e293b;
+                box-sizing: border-box;
+                transition: border-color 0.2s;
+              " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#475569'" />
             </div>
-            <div class="tournament-form-group">
-              <label for="playerCount">Number of Players</label>
-              <input type="number" id="playerCount" min="1" max="5" required />
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e2e8f0; font-size: 0.9rem;">📧 Contact Email</label>
+              <input type="email" id="contactEmail" name="email" required style="
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px solid #475569;
+                border-radius: 12px;
+                font-size: 0.9rem;
+                background: #ffffff;
+                color: #1e293b;
+                box-sizing: border-box;
+                transition: border-color 0.2s;
+              " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#475569'" />
             </div>
-            <div class="tournament-form-group">
-              <label for="contactEmail">Contact Email</label>
-              <input type="email" id="contactEmail" required />
+            <div style="margin-bottom: 30px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #e2e8f0; font-size: 0.9rem;">🏅 Team Name</label>
+              <input type="text" name="teamName" required style="
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px solid #475569;
+                border-radius: 12px;
+                font-size: 0.9rem;
+                background: #ffffff;
+                color: #1e293b;
+                box-sizing: border-box;
+                transition: border-color 0.2s;
+              " onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#475569'" placeholder="Enter your team name" />
             </div>
-            <div class="tournament-form-group">
-              <label for="discordId">Discord ID</label>
-              <input type="text" id="discordId" required />
+            <div style="
+              display: flex;
+              gap: 12px;
+              justify-content: flex-end;
+              padding-top: 20px;
+              border-top: 1px solid #475569;
+            ">
+              <button type="button" onclick="closeModal()" style="
+                padding: 12px 24px;
+                background: #475569;
+                color: #e2e8f0;
+                border: 2px solid #64748b;
+                border-radius: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+                font-size: 0.9rem;
+              " onmouseover="this.style.backgroundColor='#64748b'" onmouseout="this.style.backgroundColor='#475569'">
+                Cancel
+              </button>
+              <button type="submit" style="
+                padding: 12px 24px;
+                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.2s;
+                box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+                font-size: 0.9rem;
+              " onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(59, 130, 246, 0.6)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px rgba(59, 130, 246, 0.4)'">
+                🎮 Register for Tournament
+              </button>
             </div>
-            <div class="tournament-form-group">
-              <label for="experience">Team Experience Level</label>
-              <select id="experience" required>
-                <option value="">Select experience level</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-                <option value="professional">Professional</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary">
-              Register for Tournament
-            </button>
           </form>
         </div>
       </div>
@@ -313,10 +399,16 @@
     <script src="games/main.js"></script>
     <script src="events/events.js"></script>
     <script>
-      // Force initialize games after all scripts load
-      document.addEventListener("DOMContentLoaded", function () {
-        console.log("🚀 DOM fully loaded, checking games manager...");
-
+      // Global user object - will be populated from session
+      let currentUser = null;
+      
+      // Check authentication on page load
+      document.addEventListener("DOMContentLoaded", async function () {
+        console.log("🚀 DOM fully loaded, checking authentication...");
+        
+        // Check if user is authenticated
+        await checkAuthentication();
+        
         // Clear any existing games first
         const gamesGrid = document.getElementById("gamesGrid");
         if (gamesGrid) {
@@ -352,6 +444,83 @@
             });
         }, 1000);
       });
+
+      // Check if user is authenticated
+      async function checkAuthentication() {
+        try {
+          const response = await fetch('http://localhost/gaming-zone/api/auth.php', {
+            method: 'GET',
+            credentials: 'include' // Include session cookies
+          });
+          
+          const authData = await response.json();
+          console.log('🔐 Authentication check:', authData);
+          
+          if (authData.authenticated) {
+            currentUser = authData.user;
+            console.log('✅ User authenticated:', currentUser);
+            
+            // Update UI with user info
+            document.querySelector('.username').textContent = currentUser.name;
+            document.querySelector('.welcome-text').textContent = `Welcome back, ${currentUser.name.split(' ')[0]}!`;
+          } else {
+            console.log('❌ User not authenticated');
+            // For demo purposes, auto-login the demo user
+            await demoLogin();
+          }
+        } catch (error) {
+          console.error('❌ Authentication check failed:', error);
+          // Fallback to demo login
+          await demoLogin();
+        }
+      }
+
+      // Demo login function (for development)
+      async function demoLogin() {
+        try {
+          const response = await fetch('http://localhost/gaming-zone/api/auth.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              action: 'login',
+              email: 'iheb@example.com'
+            })
+          });
+          
+          const result = await response.json();
+          console.log('🔐 Demo login result:', result);
+          
+          if (result.success) {
+            currentUser = result.user;
+            console.log('✅ Demo login successful:', currentUser);
+            
+            // Update UI
+            document.querySelector('.username').textContent = currentUser.name;
+            document.querySelector('.welcome-text').textContent = `Welcome back, ${currentUser.name.split(' ')[0]}!`;
+          } else {
+            console.error('❌ Demo login failed:', result.error);
+            // Fallback to hardcoded user for demo
+            currentUser = {
+              id: 'user-001',
+              name: 'Elazheri Iheb',
+              email: 'iheb@example.com',
+              role: 'USER'
+            };
+          }
+        } catch (error) {
+          console.error('❌ Demo login error:', error);
+          // Fallback to hardcoded user
+          currentUser = {
+            id: 'user-001',
+            name: 'Elazheri Iheb',
+            email: 'iheb@example.com',
+            role: 'USER'
+          };
+        }
+      }
 
       // Force display function
       function forceDisplayGames(games) {
@@ -572,6 +741,571 @@
         console.log("📝 Setting games HTML...");
         gamesGrid.innerHTML = gamesHTML;
         console.log("✅ Games should now be visible with improved UI!");
+      }
+
+      // Navigation functionality
+      const navItems = document.querySelectorAll('.nav-item');
+      const sections = ['homeSection', 'gamesSection', 'tournamentSection', 'eventsSection'];
+      
+      navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          console.log('🔄 Navigation clicked:', this.getAttribute('id'));
+          
+          // Remove active class from all nav items
+          navItems.forEach(nav => nav.classList.remove('active'));
+          
+          // Add active class to clicked item
+          this.classList.add('active');
+          
+          // Hide all sections
+          sections.forEach(sectionId => {
+            const section = document.getElementById(sectionId);
+            if (section) {
+              section.style.display = 'none';
+            }
+          });
+          
+          // Show target section
+          const targetSection = this.getAttribute('id');
+          let sectionToShow = '';
+          
+          switch(targetSection) {
+            case 'homeLink':
+              sectionToShow = 'homeSection';
+              break;
+            case 'gamesLink':
+              sectionToShow = 'gamesSection';
+              // Force games initialization
+              setTimeout(() => {
+                console.log('🎮 Attempting to initialize games...');
+                forceDisplayGames();
+              }, 300);
+              break;
+            case 'tournamentsLink':
+              sectionToShow = 'tournamentSection';
+              // Force tournaments initialization
+              setTimeout(() => {
+                console.log('🏆 Attempting to initialize tournaments...');
+                loadTournamentsDirectly();
+              }, 300);
+              break;
+            case 'eventsLink':
+              sectionToShow = 'eventsSection';
+              break;
+          }
+          
+          const section = document.getElementById(sectionToShow);
+          if (section) {
+            section.style.display = 'block';
+            console.log(`✅ Switched to section: ${sectionToShow}`);
+          }
+        });
+      });
+
+      // Fallback function to load tournaments directly
+      async function loadTournamentsDirectly() {
+        console.log('🔧 Loading tournaments directly...');
+        
+        try {
+          const response = await fetch('http://localhost/gaming-zone/api/tournaments.php');
+          console.log('📡 Tournament API response status:', response.status);
+          
+          const tournaments = await response.json();
+          console.log('📦 Direct tournament fetch result:', tournaments);
+          
+          if (Array.isArray(tournaments) && tournaments.length > 0) {
+            displayTournamentsDirectly(tournaments);
+          } else {
+            showNoTournamentsMessage();
+          }
+        } catch (error) {
+          console.error('❌ Direct tournaments loading failed:', error);
+          showTournamentsErrorMessage(error.message);
+        }
+      }
+
+      function displayTournamentsDirectly(tournaments) {
+        console.log('🎨 Displaying tournaments directly...', tournaments.length);
+        
+        const tournamentsGrid = document.getElementById('tournamentsGrid');
+        if (!tournamentsGrid) {
+          console.error('❌ Tournaments grid not found');
+          return;
+        }
+
+        // Set grid layout
+        tournamentsGrid.style.cssText = `
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+          gap: 30px;
+          margin-top: 30px;
+          padding: 20px 0;
+        `;
+        
+        const tournamentsHTML = tournaments.map(tournament => {
+          console.log('🏆 Processing tournament:', tournament.name);
+          
+          const startDate = new Date(tournament.startDate);
+          const endDate = new Date(tournament.endDate);
+          const now = new Date();
+          const isActive = now >= startDate && now <= endDate;
+          const isUpcoming = now < startDate;
+          const isEnded = now > endDate;
+          
+          let statusBadge = '';
+          let statusColor = '';
+          
+          if (isEnded) {
+            statusBadge = '🏁 Ended';
+            statusColor = '#ef4444';
+          } else if (isActive) {
+            statusBadge = '🔥 Live';
+            statusColor = '#22c55e';
+          } else if (isUpcoming) {
+            statusBadge = '📅 Upcoming';
+            statusColor = '#3b82f6';
+          }
+
+          return `
+            <div class="tournament-card" style="
+              background: rgba(248, 250, 252, 0.05);
+              backdrop-filter: blur(20px);
+              border: 1px solid rgba(248, 250, 252, 0.1);
+              border-radius: 20px;
+              overflow: hidden;
+              transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+              position: relative;
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            " onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 25px 50px rgba(0, 0, 0, 0.3)'; this.style.borderColor='rgba(59, 130, 246, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 32px rgba(0, 0, 0, 0.1)'; this.style.borderColor='rgba(248, 250, 252, 0.1)'">
+              
+              <div class="tournament-image" style="
+                position: relative;
+                height: 220px;
+                overflow: hidden;
+                background: linear-gradient(45deg, #667eea, #764ba2);
+              ">
+                <img src="${tournament.imageUrl || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400'}" 
+                     alt="${tournament.name}" 
+                     style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;"
+                     onmouseover="this.style.transform='scale(1.05)'"
+                     onmouseout="this.style.transform='scale(1)'"
+                     onerror="this.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400'">
+                
+                <div style="
+                  position: absolute;
+                  top: 15px;
+                  left: 15px;
+                  background: ${statusColor};
+                  color: white;
+                  padding: 6px 12px;
+                  border-radius: 20px;
+                  font-size: 0.8rem;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                ">
+                  ${statusBadge}
+                </div>
+                
+                <div style="
+                  position: absolute;
+                  top: 15px;
+                  right: 15px;
+                  background: rgba(0, 0, 0, 0.7);
+                  color: #22c55e;
+                  padding: 6px 12px;
+                  border-radius: 20px;
+                  font-size: 0.8rem;
+                  font-weight: 600;
+                ">
+                  💰 $${tournament.prizePool || '0'}
+                </div>
+              </div>
+              
+              <div class="tournament-info" style="padding: 25px;">
+                <h3 style="
+                  color: #f8fafc;
+                  margin: 0 0 12px 0;
+                  font-size: 1.4rem;
+                  font-weight: 700;
+                  line-height: 1.2;
+                ">${tournament.name}</h3>
+                
+                <p style="
+                  color: #cbd5e1;
+                  font-size: 0.9rem;
+                  line-height: 1.6;
+                  margin-bottom: 20px;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                ">${tournament.description || 'Join this exciting tournament and compete with the best players!'}</p>
+                
+                <div style="margin-bottom: 20px;">
+                  <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                    color: #94a3b8;
+                    font-size: 0.85rem;
+                  ">
+                    <span>📅 Start: ${startDate.toLocaleDateString()} ${startDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                  </div>
+                  <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    color: #94a3b8;
+                    font-size: 0.85rem;
+                  ">
+                    <span>🏁 End: ${endDate.toLocaleDateString()} ${endDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                  </div>
+                </div>
+                
+                <div style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 25px;
+                  padding: 15px;
+                  background: rgba(59, 130, 246, 0.1);
+                  border-radius: 12px;
+                  border: 1px solid rgba(59, 130, 246, 0.2);
+                ">
+                  <div style="text-align: center;">
+                    <div style="color: #93c5fd; font-size: 0.8rem; margin-bottom: 4px;">Max Players</div>
+                    <div style="color: #f8fafc; font-weight: 700; font-size: 1.1rem;">${tournament.maxParticipants || 50}</div>
+                  </div>
+                  <div style="text-align: center;">
+                    <div style="color: #93c5fd; font-size: 0.8rem; margin-bottom: 4px;">Prize Pool</div>
+                    <div style="color: #22c55e; font-weight: 700; font-size: 1.1rem;">$${tournament.prizePool || '0'}</div>
+                  </div>
+                </div>
+                
+                <button onclick="openTournamentRegistrationModal('${tournament.id}', '${tournament.name}')" 
+                        ${isEnded ? 'disabled' : ''} 
+                        style="
+                  width: 100%;
+                  background: ${isEnded ? 'rgba(156, 163, 175, 0.5)' : 'linear-gradient(135deg, #3b82f6, #1d4ed8)'};
+                  color: white;
+                  border: none;
+                  padding: 16px 24px;
+                  border-radius: 12px;
+                  font-weight: 700;
+                  font-size: 1rem;
+                  cursor: ${isEnded ? 'not-allowed' : 'pointer'};
+                  transition: all 0.3s ease;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                " ${!isEnded ? `onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"` : ''}>
+                  ${isEnded ? '🏁 Tournament Ended' : '🎮 Register Now'}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        tournamentsGrid.innerHTML = tournamentsHTML;
+        console.log(`✅ Successfully displayed ${tournaments.length} tournaments`);
+      }
+
+      function showNoTournamentsMessage() {
+        const tournamentsGrid = document.getElementById('tournamentsGrid');
+        if (tournamentsGrid) {
+          tournamentsGrid.innerHTML = `
+            <div style="text-align: center; padding: 60px 20px; color: #94a3b8; grid-column: 1 / -1;">
+              <i class="fas fa-trophy" style="font-size: 4rem; color: #475569; margin-bottom: 20px;"></i>
+              <h3 style="font-size: 1.5rem; color: #f8fafc; margin-bottom: 12px;">No tournaments found</h3>
+              <p>No tournaments available in the database</p>
+            </div>
+          `;
+        }
+      }
+
+      function showTournamentsErrorMessage(message) {
+        const tournamentsGrid = document.getElementById('tournamentsGrid');
+        if (tournamentsGrid) {
+          tournamentsGrid.innerHTML = `
+            <div style="text-align: center; padding: 60px 20px; color: #94a3b8; grid-column: 1 / -1;">
+              <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #475569; margin-bottom: 20px;"></i>
+              <h3 style="font-size: 1.5rem; color: #f8fafc; margin-bottom: 12px;">Error Loading Tournaments</h3>
+              <p>${message}</p>
+              <button onclick="loadTournamentsDirectly()" style="
+                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                margin-top: 20px;
+              ">
+                <i class="fas fa-refresh"></i>
+                Try Again
+              </button>
+            </div>
+          `;
+        }
+      }
+
+      // Global functions for tournament registration
+      let currentTournamentId = '';
+
+      window.openTournamentRegistrationModal = function(tournamentId, tournamentName) {
+        console.log('🎯 Opening registration modal for tournament:', tournamentId);
+        
+        // Check if user is authenticated
+        if (!currentUser || !currentUser.id) {
+          alert('⚠️ Please login to register for tournaments');
+          return;
+        }
+        
+        currentTournamentId = tournamentId;
+        
+        // Set tournament data in modal
+        document.getElementById('tournamentTitle').textContent = tournamentName;
+        
+        // Pre-fill user data from authenticated session
+        document.getElementById('regUsername').value = currentUser.name;
+        document.getElementById('contactEmail').value = currentUser.email;
+        
+        // Show modal
+        const modal = document.getElementById('registrationModal');
+        if (modal) {
+          modal.style.display = 'flex';
+        }
+      };
+
+      window.closeModal = function() {
+        const modal = document.getElementById('registrationModal');
+        if (modal) {
+          modal.style.display = 'none';
+          
+          // Reset form
+          const form = document.getElementById('registrationForm');
+          if (form) {
+            form.reset();
+          }
+        }
+      };
+
+      window.handleRegistration = async function(event) {
+        event.preventDefault();
+        console.log('📝 Handling registration form submission...');
+        
+        // Check authentication again before submission
+        if (!currentUser || !currentUser.id) {
+          alert('⚠️ Authentication required. Please login first.');
+          return;
+        }
+        
+        const formData = new FormData(event.target);
+        const registrationData = {
+          userId: currentUser.id, // Get from authenticated session
+          tournamentId: currentTournamentId,
+          username: formData.get('username'),
+          email: formData.get('email'),
+          teamName: formData.get('teamName')
+        };
+        
+        console.log('📤 Sending registration data:', registrationData);
+        
+        // Disable submit button to prevent double submission
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Registering...';
+        
+        try {
+          const response = await fetch('http://localhost/gaming-zone/api/tournament-registration.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Include session cookies
+            body: JSON.stringify(registrationData)
+          });
+
+          console.log('📡 Response status:', response.status);
+          console.log('📡 Response headers:', response.headers.get('content-type'));
+
+          // Check if response is actually JSON
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            const textResponse = await response.text();
+            console.error('❌ Non-JSON response received:', textResponse);
+            throw new Error('Server returned non-JSON response. Check server logs.');
+          }
+
+          const result = await response.json();
+          console.log('📥 Registration response:', result);
+
+          if (result.success) {
+            alert('🎉 Registration successful!\n\nYou have been registered for the tournament. Check your email for confirmation.');
+            closeModal();
+          } else {
+            throw new Error(result.error || 'Registration failed');
+          }
+        } catch (error) {
+          console.error('❌ Registration failed:', error);
+          alert('❌ Registration failed: ' + error.message);
+        } finally {
+          // Re-enable submit button
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+      };
+
+      // Handle Logout - Fixed version
+      async function handleLogout() {
+        if (confirm('🚪 Are you sure you want to logout?')) {
+          console.log('🔄 Starting logout process...');
+          
+          // Show loading state
+          const logoutBtn = document.querySelector('.logout-btn');
+          const originalHTML = logoutBtn.innerHTML;
+          logoutBtn.disabled = true;
+          logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Logging out...</span>';
+          
+          try {
+            // Call logout API
+            const response = await fetch('http://localhost/gaming-zone/api/auth.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              credentials: 'include', // Include cookies for session cleanup
+              body: JSON.stringify({ action: 'logout' })
+            });
+            
+            console.log('📡 Logout response status:', response.status);
+            
+            const result = await response.json();
+            console.log('📥 Logout response:', result);
+            
+            if (result.success) {
+              console.log('✅ Server logout successful');
+              
+              // Clear all local storage
+              localStorage.clear();
+              sessionStorage.clear();
+              console.log('🧹 Local storage cleared');
+              
+              // Clear all cookies manually
+              clearAllCookies();
+              console.log('🍪 Cookies cleared');
+              
+              // Reset current user
+              currentUser = null;
+              
+              // Show success message
+              alert('👋 Logged out successfully!\n\nRedirecting to homepage...');
+              
+              // Force redirect to root after short delay
+              setTimeout(() => {
+                console.log('🔄 Redirecting to homepage...');
+                window.location.href = '/gaming-zone/';
+                
+                // Fallback: Force refresh if redirect doesn't work
+                setTimeout(() => {
+                  window.location.replace('/gaming-zone/');
+                }, 1000);
+              }, 1000);
+              
+            } else {
+              throw new Error(result.error || 'Logout failed on server');
+            }
+          } catch (error) {
+            console.error('❌ Logout error:', error);
+            
+            // Even if server logout fails, clean local data and redirect
+            console.log('⚠️ Server logout failed, but cleaning local data anyway...');
+            
+            localStorage.clear();
+            sessionStorage.clear();
+            clearAllCookies();
+            currentUser = null;
+            
+            alert('⚠️ Logout completed with warnings.\n\nRedirecting to homepage...');
+            
+            setTimeout(() => {
+              window.location.href = '/gaming-zone/';
+              
+              // Fallback
+              setTimeout(() => {
+                window.location.replace('/gaming-zone/');
+              }, 1000);
+            }, 1000);
+          } finally {
+            // Reset button state (in case redirect is delayed)
+            setTimeout(() => {
+              if (logoutBtn) {
+                logoutBtn.disabled = false;
+                logoutBtn.innerHTML = originalHTML;
+              }
+            }, 500);
+          }
+        }
+      }
+
+      // Function to clear all cookies
+      function clearAllCookies() {
+        console.log('🍪 Clearing all cookies...');
+        
+        // Get all cookies
+        const cookies = document.cookie.split(";");
+        
+        // Clear each cookie
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i];
+          const eqPos = cookie.indexOf("=");
+          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+          
+          if (name) {
+            // Clear cookie for current path
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;`;
+            
+            // Clear cookie for root path
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/gaming-zone/;`;
+            
+            // Clear cookie for current domain
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname};`;
+            
+            console.log(`🗑️ Cleared cookie: ${name}`);
+          }
+        }
+        
+        // Specifically clear known auth cookies
+        const authCookies = ['auth_token', 'user_id', 'session_id', 'PHPSESSID'];
+        authCookies.forEach(cookieName => {
+          document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;`;
+          document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/gaming-zone/;`;
+          document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname};`;
+        });
+        
+        console.log('✅ All cookies cleared');
+      }
+
+      // Enhanced function to clear specific cookie
+      function deleteCookie(name) {
+        // Clear for multiple paths and domains
+        const paths = ['/', '/gaming-zone/', '/gaming-zone/user-interface/'];
+        const domains = [window.location.hostname, `.${window.location.hostname}`];
+        
+        paths.forEach(path => {
+          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path};`;
+          
+          domains.forEach(domain => {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path};domain=${domain};`;
+          });
+        });
+      }
+
+      // Initialize Lucide icons
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
       }
     </script>
   </body>

@@ -149,3 +149,7 @@ INSERT INTO Tournament (id, startDate, endDate, prizePool, maxParticipants) VALU
 INSERT INTO Event (id, place, startDate) VALUES 
 ('event-001', 'Convention Center Downtown', '2024-05-15 10:00:00'),
 ('event-002', 'Gaming Cafe Central', '2024-06-20 19:00:00');
+
+-- Add demo user for testing
+INSERT INTO Users (id, name, username, email, password, role) VALUES 
+('user-001', 'Elazheri Iheb', 'iheb_gamer', 'iheb@example.com', '$2y$10$dummy_hash_for_testing', 'USER');
