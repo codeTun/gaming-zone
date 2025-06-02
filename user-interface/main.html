@@ -19,19 +19,38 @@
     <div class="app">
       <!-- Sidebar -->
       <div class="sidebar">
-        <!-- User Profile Section -->
+        <!-- User Profile Section - UPDATED TO LOAD DYNAMICALLY -->
         <div class="profile">
           <div class="avatar-container">
             <img
+              id="userAvatar"
               src="/user-interface/img/iheb.jpg"
               alt="Profile"
               class="avatar"
             />
             <div class="status-indicator"></div>
           </div>
-          <h2 class="username">Elazheri Iheb</h2>
-          <p class="welcome-text">Welcome back!</p>
+          <h2 class="username" id="userName">Loading...</h2>
+          <p class="welcome-text" id="welcomeText">Authenticating...</p>
+          
+          <!-- User Role Badge -->
+          <div id="userRoleBadge" style="
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: none;
+          ">
+            👤 User
+          </div>
         </div>
+        
         <!-- Navigation -->
         <nav class="nav-menu">
           <a href="#" class="nav-item active" id="homeLink">
@@ -402,12 +421,12 @@
       // Global user object - will be populated from session
       let currentUser = null;
       
-      // Check authentication on page load
+      // Check authentication on page load - ENHANCED VERSION
       document.addEventListener("DOMContentLoaded", async function () {
         console.log("🚀 DOM fully loaded, checking authentication...");
         
-        // Check if user is authenticated
-        await checkAuthentication();
+        // Check if user is authenticated and load user data
+        await loadUserData();
         
         // Clear any existing games first
         const gamesGrid = document.getElementById("gamesGrid");
@@ -444,6 +463,226 @@
             });
         }, 1000);
       });
+
+      // Enhanced function to load user data from multiple sources
+      async function loadUserData() {
+        console.log('🔐 Loading user authentication data...');
+        
+        try {
+          // Method 1: Check if user data is in localStorage (from login)
+          const storedUser = localStorage.getItem('gaming_zone_user');
+          const authToken = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+          const isAuthenticated = sessionStorage.getItem('user_authenticated');
+          
+          console.log('💾 Stored user data:', storedUser ? 'Found' : 'Not found');
+          console.log('🔑 Auth token:', authToken ? 'Found' : 'Not found');
+          console.log('✅ Authentication flag:', isAuthenticated);
+          
+          if (storedUser && authToken && isAuthenticated === 'true') {
+            // Parse stored user data
+            currentUser = JSON.parse(storedUser);
+            console.log('✅ User loaded from localStorage:', currentUser);
+            
+            // Verify token is still valid by calling API
+            await verifyTokenWithServer(authToken);
+            
+            // Update UI with user data
+            updateUserInterface();
+            return;
+          }
+          
+          // Method 2: Try to get user from server session
+          console.log('🔄 Checking server session...');
+          await checkServerAuthentication();
+          
+        } catch (error) {
+          console.error('❌ Error loading user data:', error);
+          // Redirect to login if no valid authentication found
+          redirectToLogin();
+        }
+      }
+
+      // Verify token with server
+      async function verifyTokenWithServer(token) {
+        try {
+          console.log('🔍 Verifying token with server...');
+          
+          const response = await fetch('/gaming-zone/api/auth/verify-token.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ token: token })
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            if (result.success && result.user) {
+              console.log('✅ Token verified, updating user data');
+              currentUser = result.user;
+              // Update localStorage with fresh user data
+              localStorage.setItem('gaming_zone_user', JSON.stringify(currentUser));
+              return true;
+            }
+          }
+          
+          console.log('⚠️ Token verification failed, but continuing with stored data');
+          return false;
+        } catch (error) {
+          console.log('⚠️ Token verification error:', error.message);
+          return false;
+        }
+      }
+
+      // Check server authentication (fallback method)
+      async function checkServerAuthentication() {
+        try {
+          const response = await fetch('/gaming-zone/api/auth/session.php', {
+            method: 'GET',
+            credentials: 'include' // Include session cookies
+          });
+          
+          if (response.ok) {
+            const authData = await response.json();
+            console.log('🔐 Server authentication check:', authData);
+            
+            if (authData.authenticated && authData.user) {
+              currentUser = authData.user;
+              console.log('✅ User authenticated via server session:', currentUser);
+              
+              // Store in localStorage for persistence
+              localStorage.setItem('gaming_zone_user', JSON.stringify(currentUser));
+              sessionStorage.setItem('user_authenticated', 'true');
+              
+              updateUserInterface();
+              return;
+            }
+          }
+          
+          throw new Error('No valid authentication found');
+        } catch (error) {
+          console.error('❌ Server authentication check failed:', error);
+          throw error;
+        }
+      }
+
+      // Update user interface with loaded data
+      function updateUserInterface() {
+        if (!currentUser) {
+          console.error('❌ No user data available for UI update');
+          return;
+        }
+        
+        console.log('🎨 Updating user interface with:', currentUser);
+        
+        // Update username
+        const userNameElement = document.getElementById('userName');
+        if (userNameElement) {
+          userNameElement.textContent = currentUser.name || currentUser.username || 'User';
+        }
+        
+        // Update welcome text
+        const welcomeTextElement = document.getElementById('welcomeText');
+        if (welcomeTextElement) {
+          const firstName = (currentUser.name || currentUser.username || 'User').split(' ')[0];
+          welcomeTextElement.textContent = `Welcome back, ${firstName}!`;
+        }
+        
+        // Update role badge
+        const roleBadge = document.getElementById('userRoleBadge');
+        if (roleBadge && currentUser.role) {
+          let roleIcon = '👤';
+          let roleColor = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+          
+          switch (currentUser.role.toUpperCase()) {
+            case 'ADMIN':
+              roleIcon = '👑';
+              roleColor = 'linear-gradient(135deg, #dc2626, #991b1b)';
+              break;
+            case 'MODERATOR':
+              roleIcon = '🛡️';
+              roleColor = 'linear-gradient(135deg, #7c3aed, #5b21b6)';
+              break;
+            case 'VIP':
+              roleIcon = '⭐';
+              roleColor = 'linear-gradient(135deg, #f59e0b, #d97706)';
+              break;
+            default:
+              roleIcon = '👤';
+              roleColor = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+          }
+          
+          roleBadge.innerHTML = `${roleIcon} ${currentUser.role}`;
+          roleBadge.style.background = roleColor;
+          roleBadge.style.display = 'block';
+        }
+        
+        // Update avatar if imageUrl is available
+        const avatarElement = document.getElementById('userAvatar');
+        if (avatarElement && currentUser.imageUrl) {
+          avatarElement.src = currentUser.imageUrl;
+          avatarElement.onerror = function() {
+            // Fallback to default avatar - FIXED PATH
+            this.src = 'img/avatar.webp';
+          };
+        } else if (avatarElement) {
+          // Set default avatar if no imageUrl provided
+          avatarElement.src = 'img/avatar.webp';
+          avatarElement.onerror = function() {
+            // Ultimate fallback if avatar.webp doesn't exist
+            this.src = 'img/iheb.jpg';
+          };
+        }
+        
+        // Update any other user-specific elements
+        updateUserSpecificContent();
+        
+        console.log('✅ User interface updated successfully');
+      }
+
+      // Update content based on user data
+      function updateUserSpecificContent() {
+        // Pre-fill registration forms with user data
+        const regUsernameInput = document.getElementById('regUsername');
+        const contactEmailInput = document.getElementById('contactEmail');
+        
+        if (regUsernameInput && currentUser.name) {
+          regUsernameInput.value = currentUser.name;
+        }
+        
+        if (contactEmailInput && currentUser.email) {
+          contactEmailInput.value = currentUser.email;
+        }
+        
+        // Update main title to be more personal
+        const mainTitle = document.querySelector('.main-title');
+        if (mainTitle && mainTitle.textContent === 'Welcome to Gaming Zone') {
+          const firstName = (currentUser.name || currentUser.username || 'User').split(' ')[0];
+          mainTitle.textContent = `Welcome back, ${firstName}! 🎮`;
+        }
+        
+        console.log('✅ User-specific content updated');
+      }
+
+      // Redirect to login if not authenticated
+      function redirectToLogin() {
+        console.log('🔄 No valid authentication found, redirecting to login...');
+        
+        // Clear any invalid data
+        localStorage.removeItem('gaming_zone_user');
+        localStorage.removeItem('auth_token');
+        sessionStorage.removeItem('auth_token');
+        sessionStorage.removeItem('user_authenticated');
+        
+        // Show message before redirect
+        alert('⚠️ Authentication required!\n\nPlease login to access the gaming platform.');
+        
+        // Redirect to login page
+        setTimeout(() => {
+          window.location.href = '/gaming-zone/pages/loginuser/index.html';
+        }, 1000);
+      }
 
       // Check if user is authenticated
       async function checkAuthentication() {
@@ -1176,8 +1415,7 @@
               headers: {
                 'Content-Type': 'application/json',
               },
-              credentials: 'include', // Include cookies for session cleanup
-              body: JSON.stringify({ action: 'logout' })
+              credentials: 'include' // Include cookies for session cleanup
             });
             
             console.log('📡 Logout response status:', response.status);
