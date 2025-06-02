@@ -22,7 +22,10 @@ try {
             if (isset($_GET['id'])) {
                 // Get specific event
                 $stmt = $pdo->prepare("
-                    SELECT ci.id, ci.name, ci.description, ci.imageUrl, e.place, e.startDate, ci.createdAt
+                    SELECT ci.id, ci.name as title, ci.description, ci.imageUrl, 
+                           e.place, e.startDate as eventDate,
+                           DATE_FORMAT(e.startDate, '%H:%i') as eventTime,
+                           ci.createdAt, ci.createdAt as updatedAt
                     FROM ContentItem ci
                     JOIN Event e ON ci.id = e.id
                     WHERE ci.id = ? AND ci.type = 'EVENT'
@@ -33,47 +36,74 @@ try {
             } else {
                 // Get all events
                 $stmt = $pdo->query("
-                    SELECT ci.id, ci.name, ci.description, ci.imageUrl, e.place, e.startDate, ci.createdAt
+                    SELECT ci.id, ci.name as title, ci.description, ci.imageUrl, 
+                           e.place, e.startDate as eventDate,
+                           DATE_FORMAT(e.startDate, '%H:%i') as eventTime,
+                           ci.createdAt, ci.createdAt as updatedAt
                     FROM ContentItem ci
                     JOIN Event e ON ci.id = e.id
                     WHERE ci.type = 'EVENT'
-                    ORDER BY e.startDate ASC
+                    ORDER BY e.startDate DESC
                 ");
                 echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
             }
             break;
 
         case 'POST':
-            // Create new event - auto-generate ID if not provided
-            $id = isset($input['id']) ? $input['id'] : 'event-' . uniqid();
+            // Create new event
+            $id = 'event-' . uniqid();
             
+            // Validate required fields
+            if (!isset($input['title']) || !isset($input['place']) || !isset($input['eventDate'])) {
+                echo json_encode(['error' => 'Missing required fields: title, place, eventDate']);
+                break;
+            }
+            
+            // Prepare eventTime - if provided, append to eventDate
+            $eventDateTime = $input['eventDate'];
+            if (isset($input['eventTime']) && $input['eventTime']) {
+                $eventDateTime .= ' ' . $input['eventTime'] . ':00';
+            } else {
+                $eventDateTime .= ' 10:00:00';
+            }
+            
+            // Begin transaction
             $pdo->beginTransaction();
             
-            // Insert into ContentItem
-            $stmt = $pdo->prepare("
-                INSERT INTO ContentItem (id, name, description, imageUrl, type) 
-                VALUES (?, ?, ?, ?, 'EVENT')
-            ");
-            $stmt->execute([
-                $id,
-                $input['name'],
-                $input['description'] ?? null,
-                $input['imageUrl'] ?? null
-            ]);
-            
-            // Insert into Event
-            $stmt = $pdo->prepare("
-                INSERT INTO Event (id, place, startDate) 
-                VALUES (?, ?, ?)
-            ");
-            $stmt->execute([
-                $id,
-                $input['place'],
-                $input['startDate']
-            ]);
-            
-            $pdo->commit();
-            echo json_encode(['success' => true, 'id' => $id, 'message' => 'Event created successfully']);
+            try {
+                // Insert into ContentItem
+                $stmt = $pdo->prepare("
+                    INSERT INTO ContentItem (id, name, description, imageUrl, type) 
+                    VALUES (?, ?, ?, ?, 'EVENT')
+                ");
+                $stmt->execute([
+                    $id,
+                    $input['title'],
+                    $input['description'] ?? null,
+                    $input['imageUrl'] ?? null
+                ]);
+                
+                // Insert into Event
+                $stmt = $pdo->prepare("
+                    INSERT INTO Event (id, place, startDate) 
+                    VALUES (?, ?, ?)
+                ");
+                $stmt->execute([
+                    $id,
+                    $input['place'],
+                    $eventDateTime
+                ]);
+                
+                $pdo->commit();
+                echo json_encode([
+                    'success' => true, 
+                    'id' => $id, 
+                    'message' => 'Event created successfully'
+                ]);
+            } catch (Exception $e) {
+                $pdo->rollback();
+                throw $e;
+            }
             break;
 
         case 'PUT':
@@ -85,37 +115,74 @@ try {
             
             $pdo->beginTransaction();
             
-            // Update ContentItem
-            $stmt = $pdo->prepare("
-                UPDATE ContentItem 
-                SET name = ?, description = ?, imageUrl = ? 
-                WHERE id = ? AND type = 'EVENT'
-            ");
-            $stmt->execute([
-                $input['name'],
-                $input['description'] ?? null,
-                $input['imageUrl'] ?? null,
-                $_GET['id']
-            ]);
-            
-            // Update Event
-            $stmt = $pdo->prepare("
-                UPDATE Event 
-                SET place = ?, startDate = ? 
-                WHERE id = ?
-            ");
-            $stmt->execute([
-                $input['place'],
-                $input['startDate'],
-                $_GET['id']
-            ]);
-            
-            $pdo->commit();
-            echo json_encode(['success' => true, 'message' => 'Event updated successfully']);
+            try {
+                $contentFields = [];
+                $contentValues = [];
+                
+                // Build ContentItem update
+                if (isset($input['title'])) {
+                    $contentFields[] = "name = ?";
+                    $contentValues[] = $input['title'];
+                }
+                if (isset($input['description'])) {
+                    $contentFields[] = "description = ?";
+                    $contentValues[] = $input['description'];
+                }
+                if (isset($input['imageUrl'])) {
+                    $contentFields[] = "imageUrl = ?";
+                    $contentValues[] = $input['imageUrl'];
+                }
+                
+                if (!empty($contentFields)) {
+                    $contentValues[] = $_GET['id'];
+                    $stmt = $pdo->prepare("
+                        UPDATE ContentItem 
+                        SET " . implode(', ', $contentFields) . "
+                        WHERE id = ?
+                    ");
+                    $stmt->execute($contentValues);
+                }
+                
+                // Build Event table update
+                $eventFields = [];
+                $eventValues = [];
+                
+                if (isset($input['place'])) {
+                    $eventFields[] = "place = ?";
+                    $eventValues[] = $input['place'];
+                }
+                
+                if (isset($input['eventDate'])) {
+                    $eventDateTime = $input['eventDate'];
+                    if (isset($input['eventTime']) && $input['eventTime']) {
+                        $eventDateTime .= ' ' . $input['eventTime'] . ':00';
+                    } else {
+                        $eventDateTime .= ' 10:00:00';
+                    }
+                    $eventFields[] = "startDate = ?";
+                    $eventValues[] = $eventDateTime;
+                }
+                
+                if (!empty($eventFields)) {
+                    $eventValues[] = $_GET['id'];
+                    $stmt = $pdo->prepare("
+                        UPDATE Event 
+                        SET " . implode(', ', $eventFields) . "
+                        WHERE id = ?
+                    ");
+                    $stmt->execute($eventValues);
+                }
+                
+                $pdo->commit();
+                echo json_encode(['success' => true, 'message' => 'Event updated successfully']);
+            } catch (Exception $e) {
+                $pdo->rollback();
+                throw $e;
+            }
             break;
 
         case 'DELETE':
-            // Delete event
+            // Delete event (ContentItem cascade will handle Event table)
             if (!isset($_GET['id'])) {
                 echo json_encode(['error' => 'Event ID required']);
                 break;

@@ -133,10 +133,11 @@ INSERT INTO Category (id, name) VALUES
 
 -- Insert sample content and games with explicit UUIDs
 INSERT INTO ContentItem (id, name, description, imageUrl, type) VALUES 
-('game-001', 'Space Shooter', 'Classic arcade space shooting game', 'https://example.com/space-shooter.jpg', 'GAME'),
-('game-002', 'Puzzle Master', 'Mind-bending puzzle challenges', 'https://example.com/puzzle-master.jpg', 'GAME'),
-('tournament-001', 'Spring Gaming Championship', 'Annual gaming tournament with cash prizes', 'https://example.com/tournament.jpg', 'TOURNAMENT'),
-('event-001', 'Gaming Convention 2024', 'Meet fellow gamers and try new games', 'https://example.com/convention.jpg', 'EVENT');
+('game-001', 'Space Shooter', 'Classic arcade space shooting game', 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400', 'GAME'),
+('game-002', 'Puzzle Master', 'Mind-bending puzzle challenges', 'https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=400', 'GAME'),
+('tournament-001', 'Spring Gaming Championship', 'Annual gaming tournament with cash prizes', 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400', 'TOURNAMENT'),
+('event-001', 'Gaming Convention 2024', 'Meet fellow gamers and try new games', 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400', 'EVENT'),
+('event-002', 'Retro Gaming Night', 'Nostalgic evening with classic games', 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400', 'EVENT');
 
 INSERT INTO Game (id, categoryId, minAge, targetGender, averageRating) VALUES 
 ('game-001', 'cat-001', 13, NULL, 4.5),
@@ -146,4 +147,5 @@ INSERT INTO Tournament (id, startDate, endDate, prizePool, maxParticipants) VALU
 ('tournament-001', '2024-06-01 09:00:00', '2024-06-03 18:00:00', 5000.00, 100);
 
 INSERT INTO Event (id, place, startDate) VALUES 
-('event-001', 'Convention Center Downtown', '2024-05-15 10:00:00');
+('event-001', 'Convention Center Downtown', '2024-05-15 10:00:00'),
+('event-002', 'Gaming Cafe Central', '2024-06-20 19:00:00');
