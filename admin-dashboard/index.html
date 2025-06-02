@@ -274,20 +274,28 @@
               </div>
               <form id="event_form" class="event_form">
                 <div class="event_form_group">
-                  <label for="event_title">Title</label>
+                  <label for="event_title">Event Name</label>
                   <input type="text" id="event_title" required />
                 </div>
                 <div class="event_form_group">
                   <label for="event_description">Description</label>
-                  <textarea id="event_description" rows="3" required></textarea>
+                  <textarea id="event_description" rows="3"></textarea>
                 </div>
                 <div class="event_form_group">
                   <label for="event_image">Image URL</label>
-                  <input type="text" id="event_image" required />
+                  <input type="url" id="event_image" />
                 </div>
                 <div class="event_form_group">
-                  <label for="event_date">Date</label>
+                  <label for="event_place">Event Place</label>
+                  <input type="text" id="event_place" required />
+                </div>
+                <div class="event_form_group">
+                  <label for="event_date">Event Date</label>
                   <input type="date" id="event_date" required />
+                </div>
+                <div class="event_form_group">
+                  <label for="event_time">Event Time</label>
+                  <input type="time" id="event_time" value="10:00" />
                 </div>
                 <div class="event_form_actions">
                   <button
