@@ -22,7 +22,11 @@
         <!-- User Profile Section -->
         <div class="profile">
           <div class="avatar-container">
-            <img src="/user-interface/img/iheb.jpg" alt="Profile" class="avatar" />
+            <img
+              src="/user-interface/img/iheb.jpg"
+              alt="Profile"
+              class="avatar"
+            />
             <div class="status-indicator"></div>
           </div>
           <h2 class="username">Elazheri Iheb</h2>
@@ -308,5 +312,267 @@
     <script src="tournement/tournament.js"></script>
     <script src="games/main.js"></script>
     <script src="events/events.js"></script>
+    <script>
+      // Force initialize games after all scripts load
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("🚀 DOM fully loaded, checking games manager...");
+
+        // Clear any existing games first
+        const gamesGrid = document.getElementById("gamesGrid");
+        if (gamesGrid) {
+          console.log("🧹 Clearing existing games grid content...");
+          gamesGrid.innerHTML =
+            '<div style="color: white; text-align: center; padding: 40px;">Loading games from database...</div>';
+        }
+
+        setTimeout(() => {
+          console.log(
+            "🎮 Games Manager available:",
+            typeof window.gamesManager
+          );
+          console.log("🎮 GamesManager class available:", typeof GamesManager);
+
+          // Test API directly first
+          console.log("🧪 Testing API call...");
+          fetch("http://localhost/gaming-zone/api/games.php")
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("🧪 Direct API test result:", data);
+
+              // Force display these games
+              if (Array.isArray(data) && data.length > 0) {
+                console.log("✅ API working, forcing display of games...");
+                forceDisplayGames(data);
+              } else {
+                console.error("❌ API not returning games array");
+              }
+            })
+            .catch((error) => {
+              console.error("❌ API test failed:", error);
+            });
+        }, 1000);
+      });
+
+      // Force display function
+      function forceDisplayGames(games) {
+        console.log("🎨 Force displaying games:", games.length);
+        const gamesGrid = document.getElementById("gamesGrid");
+
+        if (!gamesGrid) {
+          console.error("❌ Games grid not found!");
+          return;
+        }
+
+        // Set grid layout
+        gamesGrid.style.cssText = `
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+          gap: 30px;
+          margin-top: 30px;
+          padding: 20px 0;
+        `;
+
+        const gamesHTML = games
+          .map((game, index) => {
+            console.log(`🎮 Processing game ${index + 1}:`, game.name);
+            return `
+            <div class="game-card" style="
+              background: rgba(248, 250, 252, 0.05);
+              backdrop-filter: blur(20px);
+              border: 1px solid rgba(248, 250, 252, 0.1);
+              border-radius: 20px;
+              overflow: hidden;
+              transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+              position: relative;
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            " onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 25px 50px rgba(0, 0, 0, 0.3)'; this.style.borderColor='rgba(59, 130, 246, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 32px rgba(0, 0, 0, 0.1)'; this.style.borderColor='rgba(248, 250, 252, 0.1)'">
+              
+              <div class="game-image" style="
+                position: relative;
+                height: 220px;
+                overflow: hidden;
+                background: linear-gradient(45deg, #667eea, #764ba2);
+              ">
+                <img src="${
+                  game.imageUrl ||
+                  "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400"
+                }" 
+                     alt="${game.name}" 
+                     style="
+                       width: 100%; 
+                       height: 100%; 
+                       object-fit: cover;
+                       transition: transform 0.3s ease;
+                     "
+                     onmouseover="this.style.transform='scale(1.05)'"
+                     onmouseout="this.style.transform='scale(1)'"
+                     onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'">
+                
+                <div style="
+                  position: absolute;
+                  top: 15px;
+                  right: 15px;
+                  background: rgba(0, 0, 0, 0.7);
+                  color: #fbbf24;
+                  padding: 6px 12px;
+                  border-radius: 20px;
+                  font-size: 0.8rem;
+                  font-weight: 600;
+                  display: flex;
+                  align-items: center;
+                  gap: 4px;
+                ">
+                  ⭐ ${game.averageRating || "0.0"}
+                </div>
+                
+                <div style="
+                  position: absolute;
+                  bottom: 0;
+                  left: 0;
+                  right: 0;
+                  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+                  padding: 20px 0 10px;
+                "></div>
+              </div>
+              
+              <div class="game-info" style="padding: 25px;">
+                <div style="margin-bottom: 15px;">
+                  <h3 style="
+                    color: #f8fafc;
+                    margin: 0 0 8px 0;
+                    font-size: 1.4rem;
+                    font-weight: 700;
+                    line-height: 1.2;
+                  ">${game.name}</h3>
+                  
+                  <div style="
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 12px;
+                  ">
+                    <span style="
+                      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                      color: white;
+                      padding: 4px 12px;
+                      border-radius: 15px;
+                      font-size: 0.75rem;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.5px;
+                    ">📂 ${game.categoryName || "Unknown"}</span>
+                  </div>
+                </div>
+                
+                <p style="
+                  color: #cbd5e1;
+                  font-size: 0.9rem;
+                  line-height: 1.6;
+                  margin-bottom: 20px;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 3;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                ">${
+                  game.description ||
+                  "Experience an amazing gaming adventure with stunning graphics and immersive gameplay."
+                }</p>
+                
+                <div style="
+                  display: flex;
+                  gap: 10px;
+                  margin-bottom: 20px;
+                  flex-wrap: wrap;
+                ">
+                  ${
+                    game.minAge
+                      ? `<span style="
+                    background: rgba(59, 130, 246, 0.15);
+                    color: #93c5fd;
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    border: 1px solid rgba(59, 130, 246, 0.3);
+                  ">🔞 Age: ${game.minAge}+</span>`
+                      : ""
+                  }
+                  
+                  ${
+                    game.targetGender
+                      ? `<span style="
+                    background: rgba(236, 72, 153, 0.15);
+                    color: #f9a8d4;
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    border: 1px solid rgba(236, 72, 153, 0.3);
+                  ">👤 ${game.targetGender}</span>`
+                      : ""
+                  }
+                </div>
+                
+                <div style="
+                  display: flex;
+                  gap: 12px;
+                  margin-top: auto;
+                ">
+                  <button onclick="alert('🎮 Launching ${
+                    game.name
+                  }!\\n\\nGet ready for an epic gaming experience!')" style="
+                    flex: 1;
+                    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                    color: white;
+                    border: none;
+                    padding: 14px 20px;
+                    border-radius: 12px;
+                    font-weight: 700;
+                    font-size: 0.9rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                  " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    🎮 Play Now
+                  </button>
+                  
+                  <button onclick="alert('📋 Game Details:\\n\\nName: ${
+                    game.name
+                  }\\nCategory: ${game.categoryName}\\nRating: ${
+              game.averageRating
+            }\\nAge: ${game.minAge}+\\n\\nDescription: ${
+              game.description
+            }')" style="
+                    background: rgba(248, 250, 252, 0.1);
+                    color: #e2e8f0;
+                    border: 2px solid rgba(248, 250, 252, 0.2);
+                    padding: 14px 16px;
+                    border-radius: 12px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  " onmouseover="this.style.backgroundColor='rgba(248, 250, 252, 0.15)'; this.style.borderColor='rgba(59, 130, 246, 0.5)'" onmouseout="this.style.backgroundColor='rgba(248, 250, 252, 0.1)'; this.style.borderColor='rgba(248, 250, 252, 0.2)'">
+                    ℹ️
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+          })
+          .join("");
+
+        console.log("📝 Setting games HTML...");
+        gamesGrid.innerHTML = gamesHTML;
+        console.log("✅ Games should now be visible with improved UI!");
+      }
+    </script>
   </body>
 </html>

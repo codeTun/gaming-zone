@@ -20,10 +20,12 @@ try {
     switch ($method) {
         case 'GET':
             if (isset($_GET['id'])) {
-                // Get specific game with category
+                // Get specific game
                 $stmt = $pdo->prepare("
-                    SELECT ci.id, ci.name, ci.description, ci.imageUrl, g.categoryId, c.name as categoryName, 
-                           g.minAge, g.targetGender, g.averageRating, ci.createdAt
+                    SELECT ci.id, ci.name, ci.description, ci.imageUrl,
+                           g.categoryId, c.name as categoryName, g.minAge, 
+                           g.targetGender, g.averageRating,
+                           ci.createdAt, ci.createdAt as updatedAt
                     FROM ContentItem ci
                     JOIN Game g ON ci.id = g.id
                     LEFT JOIN Category c ON g.categoryId = c.id
@@ -33,105 +35,70 @@ try {
                 $game = $stmt->fetch(PDO::FETCH_ASSOC);
                 echo json_encode($game ?: ['error' => 'Game not found']);
             } else {
-                // Get all games with categories
+                // Get all games
                 $stmt = $pdo->query("
-                    SELECT ci.id, ci.name, ci.description, ci.imageUrl, g.categoryId, c.name as categoryName, 
-                           g.minAge, g.targetGender, g.averageRating, ci.createdAt
+                    SELECT ci.id, ci.name, ci.description, ci.imageUrl,
+                           g.categoryId, c.name as categoryName, g.minAge, 
+                           g.targetGender, g.averageRating,
+                           ci.createdAt, ci.createdAt as updatedAt
                     FROM ContentItem ci
                     JOIN Game g ON ci.id = g.id
                     LEFT JOIN Category c ON g.categoryId = c.id
                     WHERE ci.type = 'GAME'
-                    ORDER BY ci.name ASC
+                    ORDER BY ci.createdAt DESC
                 ");
                 echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
             }
             break;
 
         case 'POST':
-            // Create new game - auto-generate ID if not provided
-            $id = isset($input['id']) ? $input['id'] : 'game-' . uniqid();
+            // Create new game
+            $id = 'game-' . uniqid();
             
-            $pdo->beginTransaction();
-            
-            // Insert into ContentItem
-            $stmt = $pdo->prepare("
-                INSERT INTO ContentItem (id, name, description, imageUrl, type) 
-                VALUES (?, ?, ?, ?, 'GAME')
-            ");
-            $stmt->execute([
-                $id,
-                $input['name'],
-                $input['description'] ?? null,
-                $input['imageUrl'] ?? null
-            ]);
-            
-            // Insert into Game
-            $stmt = $pdo->prepare("
-                INSERT INTO Game (id, categoryId, minAge, targetGender, averageRating) 
-                VALUES (?, ?, ?, ?, ?)
-            ");
-            $stmt->execute([
-                $id,
-                $input['categoryId'],
-                $input['minAge'] ?? null,
-                $input['targetGender'] ?? null,
-                0.00
-            ]);
-            
-            $pdo->commit();
-            echo json_encode(['success' => true, 'id' => $id, 'message' => 'Game created successfully']);
-            break;
-
-        case 'PUT':
-            // Update game
-            if (!isset($_GET['id'])) {
-                echo json_encode(['error' => 'Game ID required']);
+            // Validate required fields
+            if (!isset($input['name']) || !isset($input['categoryId'])) {
+                echo json_encode(['error' => 'Missing required fields: name, categoryId']);
                 break;
             }
             
+            // Begin transaction
             $pdo->beginTransaction();
             
-            // Update ContentItem
-            $stmt = $pdo->prepare("
-                UPDATE ContentItem 
-                SET name = ?, description = ?, imageUrl = ? 
-                WHERE id = ? AND type = 'GAME'
-            ");
-            $stmt->execute([
-                $input['name'],
-                $input['description'] ?? null,
-                $input['imageUrl'] ?? null,
-                $_GET['id']
-            ]);
-            
-            // Update Game
-            $stmt = $pdo->prepare("
-                UPDATE Game 
-                SET categoryId = ?, minAge = ?, targetGender = ? 
-                WHERE id = ?
-            ");
-            $stmt->execute([
-                $input['categoryId'],
-                $input['minAge'] ?? null,
-                $input['targetGender'] ?? null,
-                $_GET['id']
-            ]);
-            
-            $pdo->commit();
-            echo json_encode(['success' => true, 'message' => 'Game updated successfully']);
-            break;
-
-        case 'DELETE':
-            // Delete game
-            if (!isset($_GET['id'])) {
-                echo json_encode(['error' => 'Game ID required']);
-                break;
+            try {
+                // Insert into ContentItem
+                $stmt = $pdo->prepare("
+                    INSERT INTO ContentItem (id, name, description, imageUrl, type) 
+                    VALUES (?, ?, ?, ?, 'GAME')
+                ");
+                $stmt->execute([
+                    $id,
+                    $input['name'],
+                    $input['description'] ?? null,
+                    $input['imageUrl'] ?? null
+                ]);
+                
+                // Insert into Game
+                $stmt = $pdo->prepare("
+                    INSERT INTO Game (id, categoryId, minAge, targetGender, averageRating) 
+                    VALUES (?, ?, ?, ?, 0.00)
+                ");
+                $stmt->execute([
+                    $id,
+                    $input['categoryId'],
+                    $input['minAge'] ?? null,
+                    $input['targetGender'] ?? null
+                ]);
+                
+                $pdo->commit();
+                echo json_encode([
+                    'success' => true, 
+                    'id' => $id, 
+                    'message' => 'Game created successfully'
+                ]);
+            } catch (Exception $e) {
+                $pdo->rollback();
+                throw $e;
             }
-            
-            $stmt = $pdo->prepare("DELETE FROM ContentItem WHERE id = ? AND type = 'GAME'");
-            $stmt->execute([$_GET['id']]);
-            
-            echo json_encode(['success' => true, 'message' => 'Game deleted successfully']);
             break;
 
         default:
