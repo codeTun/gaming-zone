@@ -361,3 +361,388 @@ new Chart(gameDistributionCtx, {
   tournamentCancelButton.addEventListener("click", hideModal);
   tournamentForm.addEventListener("submit", addTournament);
 })();
+
+// ------------------- Dashboard Management -------------------
+class DashboardManager {
+  constructor() {
+    this.apiBase = 'http://localhost/gaming-zone/api';
+  }
+
+  async init() {
+    console.log('📊 Initializing Dashboard with real data...');
+    await this.loadDashboardStats();
+  }
+
+  async loadDashboardStats() {
+    try {
+      // Show loading state on dashboard cards
+      this.showLoadingState();
+      
+      // Load all stats in parallel
+      const [usersData, gamesData, eventsData, tournamentsData] = await Promise.all([
+        this.fetchUsers(),
+        this.fetchGames(),
+        this.fetchEvents(),
+        this.fetchTournaments()
+      ]);
+
+      console.log('📊 Dashboard data loaded:', {
+        users: usersData.length,
+        games: gamesData.length,
+        events: eventsData.length,
+        tournaments: tournamentsData.length
+      });
+
+      this.updateDashboardStats(usersData, gamesData, eventsData, tournamentsData);
+    } catch (error) {
+      console.error('❌ Failed to load dashboard stats:', error);
+      this.showErrorState();
+    }
+  }
+
+  showLoadingState() {
+    const elements = [
+      'dashboard-total-users',
+      'dashboard-active-games', 
+      'dashboard-upcoming-events',
+      'dashboard-active-tournaments'
+    ];
+    
+    elements.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = '...';
+      }
+    });
+  }
+
+  showErrorState() {
+    const elements = [
+      'dashboard-total-users',
+      'dashboard-active-games', 
+      'dashboard-upcoming-events',
+      'dashboard-active-tournaments'
+    ];
+    
+    elements.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = 'Error';
+      }
+    });
+  }
+
+  async fetchUsers() {
+    try {
+      console.log('📡 Fetching users for dashboard...');
+      const response = await fetch(`${this.apiBase}/users.php`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      console.log('👥 Users data:', data);
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      console.error('❌ Failed to fetch users:', error);
+      return [];
+    }
+  }
+
+  async fetchGames() {
+    try {
+      console.log('📡 Fetching games for dashboard...');
+      const response = await fetch(`${this.apiBase}/games.php`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      console.log('🎮 Games data:', data);
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      console.error('❌ Failed to fetch games:', error);
+      return [];
+    }
+  }
+
+  async fetchEvents() {
+    try {
+      console.log('📡 Fetching events for dashboard...');
+      const response = await fetch(`${this.apiBase}/events.php`);
+      console.log('📥 Events API response status:', response.status, response.statusText);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Events API error response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log('📅 Events data received:', data);
+      console.log('📅 Events data type:', typeof data, 'Is array:', Array.isArray(data));
+      
+      if (Array.isArray(data)) {
+        console.log('✅ Events data is valid array with length:', data.length);
+        return data;
+      } else if (data && data.error) {
+        console.error('❌ Events API returned error:', data.error);
+        return [];
+      } else {
+        console.warn('⚠️ Events data is not an array:', data);
+        return [];
+      }
+    } catch (error) {
+      console.error('❌ Failed to fetch events:', error);
+      return [];
+    }
+  }
+
+  async fetchTournaments() {
+    try {
+      console.log('📡 Fetching tournaments for dashboard...');
+      const response = await fetch(`${this.apiBase}/tournaments.php`);
+      console.log('📥 Tournaments API response status:', response.status, response.statusText);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Tournaments API error response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log('🏆 Tournaments data received:', data);
+      console.log('🏆 Tournaments data type:', typeof data, 'Is array:', Array.isArray(data));
+      
+      if (Array.isArray(data)) {
+        console.log('✅ Tournaments data is valid array with length:', data.length);
+        return data;
+      } else if (data && data.error) {
+        console.error('❌ Tournaments API returned error:', data.error);
+        return [];
+      } else {
+        console.warn('⚠️ Tournaments data is not an array:', data);
+        return [];
+      }
+    } catch (error) {
+      console.error('❌ Failed to fetch tournaments:', error);
+      return [];
+    }
+  }
+
+  updateDashboardStats(users, games, events, tournaments) {
+    // Update Total Users
+    const totalUsersElement = document.getElementById('dashboard-total-users');
+    if (totalUsersElement) {
+      totalUsersElement.textContent = users.length;
+      console.log('✅ Updated dashboard total users:', users.length);
+    }
+
+    // Update Active Games (total games count)
+    const activeGamesElement = document.getElementById('dashboard-active-games');
+    if (activeGamesElement) {
+      activeGamesElement.textContent = games.length;
+      console.log('✅ Updated dashboard active games:', games.length);
+    }
+
+    // Update Upcoming Events - show all events for now, filter later if needed
+    console.log('📅 Processing events data:', events);
+    events.forEach(event => {
+      console.log('Event:', event.title, 'Date:', event.eventDate, 'Parsed:', new Date(event.eventDate));
+    });
+    
+    // For now, show total events count instead of filtering by date
+    // This ensures we see all events in the dashboard
+    const totalEvents = events.length;
+    
+    const upcomingEventsElement = document.getElementById('dashboard-upcoming-events');
+    if (upcomingEventsElement) {
+      upcomingEventsElement.textContent = totalEvents;
+      console.log('✅ Updated dashboard total events:', totalEvents);
+    }
+
+    // Update Active Tournaments - show all tournaments for now
+    console.log('🏆 Processing tournaments data:', tournaments);
+    tournaments.forEach(tournament => {
+      console.log('Tournament:', tournament.title, 'End Date:', tournament.endDate, 'Parsed:', new Date(tournament.endDate));
+    });
+    
+    // For now, show total tournaments count
+    const totalTournaments = tournaments.length;
+    
+    const activeTournamentsElement = document.getElementById('dashboard-active-tournaments');
+    if (activeTournamentsElement) {
+      activeTournamentsElement.textContent = totalTournaments;
+      console.log('✅ Updated dashboard total tournaments:', totalTournaments);
+    }
+
+    console.log('📊 Dashboard stats updated successfully:', {
+      totalUsers: users.length,
+      activeGames: games.length,
+      totalEvents: totalEvents,
+      totalTournaments: totalTournaments
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM loaded - main.js");
+  
+  // Initialize navigation
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      const sectionName = item.getAttribute('data-section');
+      console.log(`Navigation: switching to section "${sectionName}"`);
+      
+      // Hide all sections
+      document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected section
+      const targetSection = document.getElementById(sectionName);
+      if (targetSection) {
+        targetSection.classList.add('active');
+      }
+      
+      // Update nav items
+      document.querySelectorAll('.nav-item').forEach(navItem => {
+        navItem.classList.remove('active');
+      });
+      item.classList.add('active');
+      
+      // Initialize the appropriate manager based on section
+      try {
+        if (sectionName === 'events') {
+          console.log('Events section activated, initializing EventManager');
+          if (window.eventManager) {
+            await window.eventManager.init();
+          } else {
+            console.error('EventManager not found on window object');
+          }
+        } else if (sectionName === 'games') {
+          console.log('Games section activated, initializing GameManager');
+          if (window.gameManager) {
+            await window.gameManager.init();
+          } else {
+            console.error('GameManager not found on window object');
+          }
+        } else if (sectionName === 'tournaments') {
+          console.log('Tournaments section activated, initializing TournamentManager');
+          if (window.tournamentManager) {
+            await window.tournamentManager.init();
+            await window.tournamentManager.loadTournaments();
+          } else {
+            console.error('TournamentManager not found on window object');
+          }
+        } else if (sectionName === 'users') {
+          console.log('Users section activated, initializing UserManager');
+          if (window.userManager) {
+            await window.userManager.init();
+          } else {
+            console.error('UserManager not found on window object');
+          }
+        }
+      } catch (error) {
+        console.error(`Failed to initialize ${sectionName} section:`, error);
+      }
+    });
+  });
+
+  // Check if we should initialize any manager based on current active section
+  const activeSection = document.querySelector('.content-section.active');
+  if (activeSection) {
+    const sectionId = activeSection.id;
+    console.log(`Initial active section: ${sectionId}`);
+    
+    if (sectionId === 'events' && window.eventManager) {
+      console.log('Initializing EventManager for active events section');
+      window.eventManager.init();
+    } else if (sectionId === 'games' && window.gameManager) {
+      console.log('Initializing GameManager for active games section');
+      window.gameManager.init();
+    } else if (sectionId === 'users' && window.userManager) {
+      console.log('Initializing UserManager for active users section');
+      window.userManager.init();
+    }
+  }
+  
+  // Global error handler
+  window.addEventListener('error', (event) => {
+    console.error('Global error caught:', event.message);
+    alert('An unexpected error occurred. Please try again later.');
+  });
+  
+  // Prevent form submission on Enter key press
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        console.log('Enter key pressed - form submission prevented');
+      }
+    });
+  });
+  
+  window.dashboardManager = new DashboardManager();
+});
+
+// Navigation handling
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Main.js DOM loaded - Setting up navigation and dashboard');
+    
+    // Initialize dashboard
+    const dashboardManager = new DashboardManager();
+    window.dashboardManager = dashboardManager;
+    
+    // Load dashboard stats immediately
+    setTimeout(() => {
+      dashboardManager.init();
+    }, 500);
+    
+    const navItems = document.querySelectorAll('.nav-item');
+    const contentSections = document.querySelectorAll('.content-section');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            console.log('🔄 Navigation clicked:', this.getAttribute('data-section'));
+            
+            // Remove active class from all nav items and sections
+            navItems.forEach(nav => nav.classList.remove('active'));
+            contentSections.forEach(section => section.classList.remove('active'));
+            
+            // Add active class to clicked nav item
+            this.classList.add('active');
+            
+            // Show corresponding section
+            const targetSection = this.getAttribute('data-section');
+            const section = document.getElementById(targetSection);
+            if (section) {
+                section.classList.add('active');
+                console.log('✅ Activated section:', targetSection);
+                
+                // Initialize managers when their sections are viewed
+                setTimeout(() => {
+                    if (targetSection === 'dashboard') {
+                        console.log('📊 Dashboard section - refreshing stats...');
+                        dashboardManager.init();
+                    } else if (targetSection === 'users') {
+                        console.log('👥 Users section - checking userManager...');
+                        if (typeof window.UserManager !== 'undefined') {
+                            if (!window.userManager) {
+                                window.userManager = new window.UserManager();
+                            }
+                            window.userManager.init();
+                        }
+                    } else if (targetSection === 'games' && window.gameManager) {
+                        console.log('🔄 Initializing Game Management...');
+                        window.gameManager.init();
+                      } else if (targetSection === 'events' && window.eventManager) {
+                        console.log('🔄 Initializing Event Management...');
+                        window.eventManager.init();
+                      } else if (targetSection === 'tournaments' && window.tournamentManager) {
+                        console.log('🔄 Initializing Tournament Management...');
+                        window.tournamentManager.init();
+                      }
+                }, 200);
+            }
+        });
+    });
+});

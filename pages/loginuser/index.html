@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Gaming Zone</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Signing you in...</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="login-card">
+            <!-- Home Icon -->
+            <a href="/gaming-zone/" class="home-icon">
+                <i class="fas fa-home"></i>
+            </a>
+            
+            <!-- Registration Success Message -->
+            <div id="registrationSuccess" class="success-message">
+                🎉 Account created successfully! Please sign in with your credentials.
+            </div>
+           
+            <!-- Title -->
+            <h1 class="title">Sign in from here</h1>
+            
+            <!-- Logo -->
+            <div class="logo-container">
+                <img src='/gaming-zone/assets/images/logo.png' alt="Gaming Logo" class="logo" />
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="login-form">
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Enter your email address" required />
+                    <i class="fas fa-envelope input-icon"></i>
+                </div>
+                
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Enter your password" required />
+                    <i class="fas fa-lock input-icon"></i>
+                    <button type="button" id="togglePassword" class="password-toggle">
+                        <i class="fas fa-eye" id="passwordIcon"></i>
+                    </button>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Remember me for 30 days</label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="loginBtn" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Sign In</span>
+                </button>
+            </form>
+
+            <!-- Demo Login Button -->
+            <button id="demoLoginBtn" class="demo-btn">
+                <i class="fas fa-user"></i>
+                <span>Demo Login (Test User)</span>
+            </button>
+
+            <!-- Links Section -->
+            <div class="links-section">
+                <p class="create-account-text">If you don't have an account</p>
+                <a href="/gaming-zone/pages/createaccount/createaccount.html" class="create-account-btn">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account Here!
+                </a>
+                
+                <!-- New Account Helper Section -->
+                <div class="account-helper">
+                    <p class="account-helper-text">
+                        🆕 New to Gaming Zone? Join our community today!
+                    </p>
+                    <a href="/gaming-zone/pages/createaccount/createaccount.html" class="new-account-btn">
+                        <i class="fas fa-rocket"></i>
+                        Get Started Now
+                    </a>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="#" id="forgotPasswordLink">
+                        <i class="fas fa-key"></i>
+                        Forgot your password?
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+# Environment files
+.env
+.env.local
+.env.production
+
+# Database
+*.sql.backup
+
+# Logs
+*.log
+logs/
+
+# Cache
+cache/
+temp/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies (if using Composer)
+vendor/
+composer.lock

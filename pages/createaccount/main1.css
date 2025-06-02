@@ -1,160 +1,511 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Raleway, sans-serif;
+    box-sizing: border-box;
 }
 
 body {
-    background: url('/assets/images/purple-gaming-bw9kl5n6y8edoyim.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
+    font-family: 'Rajdhani', sans-serif;
+    background: linear-gradient(135deg, 
+        #0a0e1a 0%, 
+        #1a1f3a 25%, 
+        #2d1b69 50%, 
+        #1e3a8a 75%, 
+        #0a0e1a 100%
+    );
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0;
+    position: relative;
+    overflow-x: hidden;
+    padding: 20px 0;
+}
+
+/* Cyberpunk Grid Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Floating Particles */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+    animation: particleFloat 25s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes particleFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(50px, -100px) rotate(90deg); }
+    50% { transform: translate(-30px, -50px) rotate(180deg); }
+    75% { transform: translate(-80px, 30px) rotate(270deg); }
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
-    height: 100%;
+    max-width: 480px;
+    padding: 20px;
+    position: relative;
+    z-index: 10;
 }
 
 .card {
-    width: 520px;
-    height: 588px;
-    background: #07182E;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    border-radius: 20px;
-    overflow: hidden;
+    background: linear-gradient(145deg, 
+        rgba(15, 25, 45, 0.95) 0%, 
+        rgba(25, 35, 65, 0.95) 50%, 
+        rgba(15, 25, 45, 0.95) 100%
+    );
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 3px solid rgba(0, 255, 255, 0.4);
+    border-radius: 25px;
+    padding: 40px 35px;
     text-align: center;
-    z-index: 1;
-    padding: 20px;
-}
-
-.card::before {
-    content: '';
-    position: absolute;
-    width: 100px;
-    height: 130%;
-    background-image: linear-gradient(180deg, rgb(0, 183, 255), rgb(255, 48, 255));
-    animation: rotBGimg 3s linear infinite;
-    z-index: 0;
-}
-
-.card::after {
-    content: '';
-    position: absolute;
-    inset: 5px;
-    background: #07182E;
-    border-radius: 15px;
-    z-index: 0;
-}
-
-.card h2, .card img, .card input, .card button, .card h5, .card a {
-    z-index: 10;
     position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.8),
+        0 0 40px rgba(0, 255, 255, 0.2);
 }
 
-.radio-group {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    color: white;
-}
-
-label {
-    display: flex;
-    align-items: center;
-}
-
-.icon {
-    font-size: 50px;
-    margin: 0;
-    color: white;
-}
-
-.card img {
-    width: 100px;
-    height: auto;
-    margin-bottom: 15px;
-}
-
-.card input {
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-}
-
-.card button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background: rgb(0, 183, 255);
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.card button:hover {
-    background: rgb(255, 48, 255);
-}
-
-.card h5 {
-    color: white;
-}
-
-.card a {
-    color: #00b7ff;
-    text-decoration: underline;
-    font-size: 0.9em;
-    cursor: pointer;
-}
-
-.card a:hover {
-    color: #ff30ff;
+.card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 
+        0 40px 80px rgba(0, 0, 0, 0.9),
+        0 0 50px rgba(0, 255, 255, 0.3);
 }
 
 .back-arrow {
     position: absolute;
-    top: 22px;
+    top: 20px;
     left: 20px;
-    z-index: 15;
 }
 
-.back-arrow button {
-    background: none;
+.back-arrow a {
+    color: #00ffff;
+    font-size: 1.3rem;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        rgba(0, 255, 255, 0.3) 0%, 
+        rgba(0, 255, 255, 0.1) 100%
+    );
+    border: 2px solid rgba(0, 255, 255, 0.5);
+    transition: all 0.4s ease;
+    backdrop-filter: blur(15px);
+    display: inline-block;
+}
+
+.back-arrow a:hover {
+    background: radial-gradient(circle, 
+        rgba(0, 255, 255, 0.5) 0%, 
+        rgba(0, 255, 255, 0.2) 100%
+    );
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 15px 30px rgba(0, 255, 255, 0.5);
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+}
+
+h2 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    margin-top: 15px;
+    color: #00ffff;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+}
+
+.card img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 25px;
+    border-radius: 20px;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.7),
+        0 0 0 3px rgba(0, 255, 255, 0.3);
+    transition: all 0.4s ease;
+    filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
+}
+
+.card img:hover {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.8),
+        0 0 40px rgba(0, 255, 255, 0.7);
+}
+
+.card input {
+    width: 100%;
+    padding: 15px 20px;
+    margin-bottom: 18px;
+    background: linear-gradient(145deg, 
+        rgba(0, 255, 255, 0.1), 
+        rgba(255, 0, 255, 0.1)
+    );
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Rajdhani', sans-serif;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(20px);
+}
+
+.card input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+.card input:focus {
+    outline: none;
+    border-color: #00ffff;
+    background: linear-gradient(145deg, 
+        rgba(0, 255, 255, 0.2), 
+        rgba(255, 0, 255, 0.2)
+    );
+    box-shadow: 0 0 0 4px rgba(0, 255, 255, 0.3);
+    transform: translateY(-2px);
+    color: #ffffff;
+}
+
+.card label {
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    text-align: left;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.card button {
+    width: 100%;
+    padding: 16px 25px;
     border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 800;
+    font-family: 'Orbitron', monospace;
     cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
 }
 
-.back-arrow i {
-    font-size: 1.8em; /* Taille de l'icône de la flèche */
+/* Primary button (Create Account) */
+.card button[type="submit"],
+.card button:not([onclick]) {
+    background: linear-gradient(135deg, #00ffff, #0080ff);
+    color: #000000;
+    box-shadow: 0 15px 35px rgba(0, 255, 255, 0.4);
+}
+
+.card button[type="submit"]:hover,
+.card button:not([onclick]):hover {
+    background: linear-gradient(135deg, #0080ff, #00ffff);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 20px 45px rgba(0, 255, 255, 0.5);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Cancel/Secondary button */
+.card button[onclick*="redirectToLogin"],
+.card button[onclick*="cancel"] {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
+}
+
+.card button[onclick*="redirectToLogin"]:hover,
+.card button[onclick*="cancel"]:hover {
+    background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 20px 45px rgba(255, 107, 107, 0.5);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.card button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    background: linear-gradient(135deg, #666, #444);
+}
+
+/* Radio button styling */
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    padding: 12px 20px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    font-weight: 600;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.radio-group label:hover {
+    background: rgba(0, 255, 255, 0.2);
+    border-color: rgba(0, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 8px;
+    transform: scale(1.3);
+    accent-color: #00ffff;
+}
+
+.radio-group input[type="radio"]:checked + * {
+    color: #00ffff;
+}
+
+.radio-group h5 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+/* Gender selection styling */
+#desc {
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Password strength indicator */
+#passwordStrength {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+#strengthBar {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 8px;
+    margin-bottom: 8px;
+}
+
+#strengthFill {
+    height: 100%;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+#strengthText {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Success/Error messages */
+#messageContainer {
+    animation: slideInBounce 0.6s ease;
+    margin-bottom: 20px;
+}
+
+@keyframes slideInBounce {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+#messageText {
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    padding: 15px 20px;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+#messageText.success {
+    background: linear-gradient(135deg, 
+        rgba(76, 175, 80, 0.9), 
+        rgba(129, 199, 132, 0.9)
+    );
+    border: 2px solid #4caf50;
     color: white;
 }
 
-.back-arrow i:hover {
-    color: #00b7ff;
+#messageText.error {
+    background: linear-gradient(135deg, 
+        rgba(244, 67, 54, 0.9), 
+        rgba(229, 115, 115, 0.9)
+    );
+    border: 2px solid #f44336;
+    color: white;
 }
 
-@keyframes rotBGimg {
-    from {
-        transform: rotate(0deg);
+/* Link styling */
+.card a {
+    color: #00ff80;
+    text-decoration: none;
+    font-weight: 600;
+    font-family: 'Rajdhani', sans-serif;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.card a:hover {
+    color: #00ffff;
+    background: rgba(0, 255, 128, 0.2);
+    transform: translateY(-2px);
+    text-shadow: 0 0 15px rgba(0, 255, 128, 0.8);
+    box-shadow: 0 10px 25px rgba(0, 255, 128, 0.3);
+}
+
+/* Loading overlay */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(25px);
+    font-family: 'Orbitron', monospace;
+    color: #00ffff;
+    font-size: 1.2rem;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(0, 255, 255, 0.3);
+    border-top: 4px solid #00ffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Enhanced form validation styles */
+.card input.error {
+    border-color: #f44336 !important;
+    box-shadow: 0 0 0 4px rgba(244, 67, 54, 0.15) !important;
+}
+
+.card input.success {
+    border-color: #4caf50 !important;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15) !important;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+        max-width: 95%;
     }
-    to {
-        transform: rotate(360deg);
+    
+    .card {
+        padding: 30px 25px;
+        border-radius: 20px;
     }
+    
+    h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    
+    .card img {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+    }
+    
+    .card input {
+        padding: 12px 18px;
+        font-size: 0.95rem;
+    }
+    
+    .card button {
+        padding: 14px 20px;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+    
+    .radio-group {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .radio-group label {
+        min-width: 200px;
+    }
+}
+
+/* Enhanced focus states */
+.card input:focus,
+.card button:focus,
+.radio-group input:focus + label {
+    outline: 2px solid rgba(0, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+/* Smooth transitions */
+* {
+    transition: all 0.3s ease;
 }

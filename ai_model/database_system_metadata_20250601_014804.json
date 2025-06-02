@@ -1,0 +1,75 @@
+{
+  "timestamp": "20250601_014804",
+  "system_type": "Database-Compatible Game Recommendation System",
+  "model_performance": {
+    "test_mse": 0.32543728393836807,
+    "test_mae": 0.43723235820612033,
+    "cv_mse": 0.3398734130320079
+  },
+  "database_schema": {
+    "tables_used": [
+      "Users",
+      "Game",
+      "GameRating",
+      "UserGame",
+      "Category",
+      "ContentItem"
+    ],
+    "key_fields": {
+      "Users": [
+        "id",
+        "birthDate",
+        "gender"
+      ],
+      "Game": [
+        "id",
+        "categoryId",
+        "minAge",
+        "targetGender",
+        "averageRating"
+      ],
+      "GameRating": [
+        "userId",
+        "gameId",
+        "rating"
+      ],
+      "UserGame": [
+        "userId",
+        "gameId",
+        "score"
+      ],
+      "Category": [
+        "id",
+        "name"
+      ],
+      "ContentItem": [
+        "id",
+        "name",
+        "imageUrl"
+      ]
+    }
+  },
+  "features": {
+    "total_features": 36,
+    "user_features": [
+      "age",
+      "gender",
+      "gaming_activity"
+    ],
+    "game_features": [
+      "average_rating",
+      "min_age",
+      "target_gender",
+      "category"
+    ],
+    "key_features": [
+      "category_preference_score",
+      "is_top_preferred_category"
+    ]
+  },
+  "integration": {
+    "input_format": "Database tables (Users, Game, GameRating, UserGame, Category)",
+    "output_format": "List of recommended games with metadata",
+    "api_function": "get_game_recommendations(user_id, connection, n_recommendations)"
+  }
+}

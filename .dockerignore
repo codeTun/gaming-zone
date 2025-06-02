@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
+README.md
+docker/README.md
+
+# Logs
+*.log
+logs/
+
+# Cache and temporary files
+cache/
+temp/
+tmp/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+vendor/
+composer.lock
+
+# Environment files (will be mounted as volume)
+.env.local
+.env.production

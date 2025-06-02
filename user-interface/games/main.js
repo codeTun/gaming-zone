@@ -1,141 +1,279 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Games Section Elements
-  const gamesGrid = document.getElementById("gamesGrid");
-  const searchInput = document.getElementById("searchInput");
-  const categoryFilter = document.getElementById("gamesCategoryFilter");
-  const ratingFilter = document.getElementById("gamesRatingFilter");
+  console.log('🎮 Games main.js file loaded');
 
-  // Sample games data
-  const games = [
-    {
-      id: 1,
-      title: "The Legend of Adventure",
-      category: "adventure",
-      rating: 4.8,
-      description: "Embark on an epic journey through mystical lands.",
-      image: "https://assets-prd.ignimgs.com/2023/03/30/legend-of-zelda-games-in-order-copy-2-1-1680206161110.jpg",
-    },
-    {
-      id: 2,
-      title: "Space Warriors",
-      category: "action",
-      rating: 4.5,
-      description: "Defend the galaxy in this action-packed space shooter.",
-      image: "https://metadata-static.plex.tv/a/gracenote/ac58b5bd27ce338d464e1c201ea1e806.jpg",
-    },
-    {
-      id: 3,
-      title: "Strategic Kingdoms",
-      category: "strategy",
-      rating: 4.2,
-      description: "Build and manage your medieval kingdom.",
-      image: "https://th.bing.com/th/id/R.a6d16adec7a211bbe311cfed78373697?rik=%2bnB4Z%2fQRyzKDKw&pid=ImgRaw&r=0",
-    },
-    {
-      id: 4,
-      title: "Football Champions",
-      category: "sports",
-      rating: 4.6,
-      description: "Lead your team to victory in this sports simulation.",
-      image: "https://kanae331.files.wordpress.com/2010/10/fcbarcelona.jpg?w=640",
-    },
-    {
-      id: 5,
-      title: "Dragon Quest RPG",
-      category: "rpg",
-      rating: 4.9,
-      description: "Experience an immersive role-playing adventure.",
-      image: "https://th.bing.com/th/id/R.9137ed956c1fe81b5b812b49aef7d780?rik=NYCtiqtw1w9Psw&pid=ImgRaw&r=0",
-    },
-    {
-      id: 6,
-      title: "Ninja Warriors",
-      category: "action",
-      rating: 4.3,
-      description: "Master the art of stealth and combat.",
-      image: "https://th.bing.com/th/id/OIP.avvRZFeQ6LeRlwwYcypdnAHaFZ?rs=1&pid=ImgDetMain",
-    },
-  ];
+  class GamesManager {
+    constructor() {
+      this.games = [];
+      this.filteredGames = [];
+      this.apiBase = 'http://localhost/gaming-zone/api';
+      this.initialized = false;
+      console.log('🏗️ GamesManager constructor called');
+    }
 
-  // Create star rating HTML
-  function getStarRating(rating) {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    let stars = "";
+    async init() {
+      console.log('🚀 GamesManager.init() called');
+      
+      if (this.initialized) {
+        console.log('🔄 Games manager already initialized, refreshing...');
+        await this.loadGames();
+        return;
+      }
 
-    for (let i = 0; i < 5; i++) {
-      if (i < fullStars) {
-        stars += '<i class="fas fa-star"></i>';
-      } else if (i === fullStars && hasHalfStar) {
-        stars += '<i class="fas fa-star-half-alt"></i>';
-      } else {
-        stars += '<i class="far fa-star"></i>';
+      console.log('🎮 First time initializing Games Manager...');
+      await this.loadGames();
+      this.bindEvents();
+      this.initialized = true;
+      console.log('✅ GamesManager fully initialized');
+    }
+
+    async loadGames() {
+      console.log('📡 Starting to fetch games from API...');
+      
+      try {
+        // Show loading state
+        this.showLoading();
+        
+        const apiUrl = `${this.apiBase}/games.php`;
+        console.log('📡 Making request to:', apiUrl);
+        
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        
+        console.log('📥 Response received:', response.status, response.statusText);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('❌ API Error Response:', errorText);
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+        
+        const data = await response.json();
+        console.log('📦 Raw API data:', data);
+        console.log('📦 Data type:', typeof data, 'Is Array:', Array.isArray(data));
+        
+        if (Array.isArray(data)) {
+          this.games = data;
+          this.filteredGames = [...this.games];
+          console.log(`✅ Successfully loaded ${this.games.length} games:`, this.games);
+          this.renderGames();
+        } else if (data && data.error) {
+          console.error('❌ API returned error:', data.error);
+          throw new Error(data.error);
+        } else {
+          console.error('❌ Invalid response format:', data);
+          throw new Error('Invalid response format from API');
+        }
+      } catch (error) {
+        console.error('❌ Failed to load games:', error);
+        this.showError('Failed to load games: ' + error.message);
       }
     }
 
-    return stars;
-  }
-
-  // Capitalize first letter
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
-  // Render games
-  function renderGames(filteredGames) {
-    if (!gamesGrid) return; // Ensure gamesGrid exists
-    gamesGrid.innerHTML = "";
-
-    filteredGames.forEach((game) => {
-      const gameCard = document.createElement("div");
-      gameCard.className = "game-card";
-
-      gameCard.innerHTML = `
-        <img src="${game.image}" alt="${game.title}" class="game-image">
-        <div class="game-info">
-          <h3 class="game-title">${game.title}</h3>
-          <span class="game-category">${capitalizeFirstLetter(
-            game.category
-          )}</span>
-          <div class="game-rating">
-            ${getStarRating(game.rating)}
-            <span style="color: #666; margin-left: 5px;">(${game.rating})</span>
+    showLoading() {
+      console.log('🔄 Showing loading state...');
+      const gamesGrid = document.getElementById('gamesGrid');
+      if (gamesGrid) {
+        gamesGrid.innerHTML = `
+          <div class="loading-container">
+            <div class="loading-spinner">
+              <div class="spinner"></div>
+            </div>
+            <p>Loading games from database...</p>
           </div>
-          <p class="game-description">${game.description}</p>
-        </div>
-      `;
+        `;
+      } else {
+        console.error('❌ gamesGrid element not found!');
+      }
+    }
 
-      gamesGrid.appendChild(gameCard);
+    renderGames() {
+      console.log(`🎨 Starting to render ${this.filteredGames.length} games...`);
+      
+      const gamesGrid = document.getElementById('gamesGrid');
+      if (!gamesGrid) {
+        console.error('❌ Games grid element not found!');
+        return;
+      }
+
+      if (this.filteredGames.length === 0) {
+        console.log('📭 No games to display');
+        gamesGrid.innerHTML = `
+          <div class="no-games">
+            <i class="fas fa-gamepad"></i>
+            <h3>No games found</h3>
+            <p>No games available in the database</p>
+          </div>
+        `;
+        return;
+      }
+
+      console.log('🔧 Building games HTML...');
+      const gamesHTML = this.filteredGames.map((game, index) => {
+        console.log(`🎯 Processing game ${index + 1}:`, game);
+        return `
+          <div class="game-card" data-game-id="${game.id}">
+            <div class="game-image">
+              <img src="${game.imageUrl || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'}" 
+                   alt="${game.name}" 
+                   onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400'">
+              <div class="game-overlay">
+                <button class="play-btn" onclick="window.gamesManager.playGame('${game.id}')">
+                  <i class="fas fa-play"></i>
+                  Play Now
+                </button>
+              </div>
+            </div>
+            <div class="game-info">
+              <h3 class="game-title">${game.name}</h3>
+              <p class="game-description">${game.description || 'No description available'}</p>
+              <div class="game-meta">
+                <span class="game-category">
+                  <i class="fas fa-tag"></i>
+                  ${game.categoryName || 'Unknown'}
+                </span>
+                <span class="game-rating">
+                  <i class="fas fa-star"></i>
+                  ${game.averageRating || '0.0'}
+                </span>
+              </div>
+              <div class="game-details">
+                ${game.minAge ? `<span class="age-rating">Age: ${game.minAge}+</span>` : ''}
+                ${game.targetGender ? `<span class="target-gender">${game.targetGender}</span>` : ''}
+              </div>
+              <div class="game-actions">
+                <button class="btn btn-primary" onclick="window.gamesManager.playGame('${game.id}')">
+                  <i class="fas fa-gamepad"></i>
+                  Play Game
+                </button>
+                <button class="btn btn-secondary" onclick="window.gamesManager.viewDetails('${game.id}')">
+                  <i class="fas fa-info-circle"></i>
+                  Details
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      console.log('📝 Setting innerHTML with games HTML...');
+      gamesGrid.innerHTML = gamesHTML;
+      console.log(`✅ Successfully rendered ${this.filteredGames.length} games in DOM`);
+    }
+
+    bindEvents() {
+      console.log('🔗 Binding search and filter events...');
+      
+      // Search functionality
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          console.log('🔍 Search input changed:', e.target.value);
+          this.filterGames(e.target.value, null, null);
+        });
+        console.log('✅ Search input bound');
+      }
+
+      // Category filter
+      const categoryFilter = document.getElementById('gamesCategoryFilter');
+      if (categoryFilter) {
+        categoryFilter.addEventListener('change', (e) => {
+          console.log('🏷️ Category filter changed:', e.target.value);
+          const searchTerm = searchInput ? searchInput.value : '';
+          const ratingFilter = document.getElementById('gamesRatingFilter')?.value || '';
+          this.filterGames(searchTerm, e.target.value, ratingFilter);
+        });
+        console.log('✅ Category filter bound');
+      }
+
+      // Rating filter
+      const ratingFilter = document.getElementById('gamesRatingFilter');
+      if (ratingFilter) {
+        ratingFilter.addEventListener('change', (e) => {
+          console.log('⭐ Rating filter changed:', e.target.value);
+          const searchTerm = searchInput ? searchInput.value : '';
+          const categoryFilter = document.getElementById('gamesCategoryFilter')?.value || '';
+          this.filterGames(searchTerm, categoryFilter, e.target.value);
+        });
+        console.log('✅ Rating filter bound');
+      }
+    }
+
+    filterGames(searchTerm = '', category = '', rating = '') {
+      console.log('🔍 Filtering games with:', { searchTerm, category, rating });
+      
+      this.filteredGames = this.games.filter(game => {
+        const matchesSearch = !searchTerm || 
+          game.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (game.description && game.description.toLowerCase().includes(searchTerm.toLowerCase()));
+        
+        const matchesCategory = !category || 
+          (game.categoryName && game.categoryName.toLowerCase() === category.toLowerCase());
+        
+        const matchesRating = !rating || 
+          (game.averageRating && parseFloat(game.averageRating) >= parseFloat(rating));
+
+        return matchesSearch && matchesCategory && matchesRating;
+      });
+
+      console.log(`🔍 Filtered results: ${this.filteredGames.length} out of ${this.games.length} games`);
+      this.renderGames();
+    }
+
+    playGame(gameId) {
+      const game = this.games.find(g => g.id === gameId);
+      if (game) {
+        console.log('🎮 Playing game:', game.name);
+        alert(`🎮 Launching ${game.name}!\n\nThis would normally open the game interface.`);
+      }
+    }
+
+    viewDetails(gameId) {
+      const game = this.games.find(g => g.id === gameId);
+      if (game) {
+        console.log('📋 Viewing details for:', game.name);
+        alert(`📋 Game Details:\n\nName: ${game.name}\nCategory: ${game.categoryName}\nRating: ${game.averageRating}\nAge: ${game.minAge}+\n\nDescription: ${game.description}`);
+      }
+    }
+
+    showError(message) {
+      console.log('❌ Showing error message:', message);
+      const gamesGrid = document.getElementById('gamesGrid');
+      if (gamesGrid) {
+        gamesGrid.innerHTML = `
+          <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Error Loading Games</h3>
+            <p>${message}</p>
+            <button class="btn btn-primary" onclick="window.gamesManager.loadGames()">
+              <i class="fas fa-refresh"></i>
+              Try Again
+            </button>
+          </div>
+        `;
+      }
+    }
+  }
+
+  // Create global instance immediately
+  console.log('🌐 Creating global GamesManager instance...');
+  window.gamesManager = new GamesManager();
+  console.log('✅ Global GamesManager created:', window.gamesManager);
+
+  // Test API directly
+  console.log('🧪 Testing API connection...');
+  fetch('http://localhost/gaming-zone/api/games.php')
+    .then(response => {
+      console.log('🧪 API Test Response:', response.status, response.statusText);
+      return response.json();
+    })
+    .then(data => {
+      console.log('🧪 API Test Data:', data);
+    })
+    .catch(error => {
+      console.error('🧪 API Test Failed:', error);
     });
-  }
-
-  // Filter games
-  function filterGames() {
-    const searchTerm = searchInput.value.toLowerCase();
-    const selectedCategory = categoryFilter.value.toLowerCase();
-    const selectedRating = parseFloat(ratingFilter.value);
-
-    const filteredGames = games.filter((game) => {
-      const matchesSearch =
-        game.title.toLowerCase().includes(searchTerm) ||
-        game.description.toLowerCase().includes(searchTerm);
-      const matchesCategory =
-        !selectedCategory || game.category === selectedCategory;
-      const matchesRating = !selectedRating || game.rating >= selectedRating;
-
-      return matchesSearch && matchesCategory && matchesRating;
-    });
-
-    renderGames(filteredGames);
-  }
-
-  // Event listeners for Games Section
-  if (searchInput && categoryFilter && ratingFilter) {
-    searchInput.addEventListener("input", filterGames);
-    categoryFilter.addEventListener("change", filterGames);
-    ratingFilter.addEventListener("change", filterGames);
-  }
-
-  // Initial render
-  renderGames(games);
 });
